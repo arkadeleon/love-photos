@@ -17,6 +17,17 @@ class AccountCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        addAccountCollectionView()
+
+        let fetchRequest = NSFetchRequest<S3Account>(entityName: "S3Account")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
+
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+    }
+
+    private func addAccountCollectionView() {
         let listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         let listLayout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
 
@@ -48,13 +59,6 @@ class AccountCollectionViewController: UIViewController {
         collectionView.dataSource = diffableDataSource
 
         view.addSubview(collectionView)
-
-        let fetchRequest = NSFetchRequest<S3Account>(entityName: "S3Account")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
-
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
     }
 }
 

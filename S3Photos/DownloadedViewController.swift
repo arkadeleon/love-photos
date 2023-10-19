@@ -10,6 +10,22 @@ import UIKit
 
 class DownloadedViewController: UIViewController {
 
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+
+        title = "Downloaded"
+
+        tabBarItem = UITabBarItem(
+            title: "Downloaded",
+            image: UIImage(systemName: "arrow.down.circle"),
+            selectedImage: UIImage(systemName: "arrow.down.circle.fill")
+        )
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 

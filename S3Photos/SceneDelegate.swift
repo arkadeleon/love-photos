@@ -19,31 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
 
-        let browseViewController = BrowseViewController(prefix: "")
-        browseViewController.title = "Browse"
-        browseViewController.tabBarItem = UITabBarItem(
-            title: "Browse",
-            image: UIImage(systemName: "photo.circle"),
-            selectedImage: UIImage(systemName: "photo.circle.fill")
-        )
+        let browseViewController = BrowseViewController()
         let browseNavigationController = UINavigationController(rootViewController: browseViewController)
+        browseNavigationController.hidesBarsOnSwipe = true
 
         let downloadedViewController = DownloadedViewController()
-        downloadedViewController.title = "Downloaded"
-        downloadedViewController.tabBarItem = UITabBarItem(
-            title: "Downloaded",
-            image: UIImage(systemName: "arrow.down.circle"),
-            selectedImage: UIImage(systemName: "arrow.down.circle.fill")
-        )
         let downloadedNavigationController = UINavigationController(rootViewController: downloadedViewController)
+        downloadedNavigationController.hidesBarsOnSwipe = true
 
         let accountsViewController = AccountsViewController()
-        accountsViewController.title = "Accounts"
-        accountsViewController.tabBarItem = UITabBarItem(
-            title: "Accounts",
-            image: UIImage(systemName: "person.circle"),
-            selectedImage: UIImage(systemName: "person.circle.fill")
-        )
         let accountsNavigationController = UINavigationController(rootViewController: accountsViewController)
 
         let tabBarController = UITabBarController()

@@ -8,16 +8,10 @@
 import CoreData
 import UIKit
 
-@MainActor protocol ObjectCollectionViewControllerDelegate: NSObjectProtocol {
-    func objectCollectionViewController(_ viewController: ObjectCollectionViewController, didSelectFolderObject object: S3Object)
-}
-
 class ObjectCollectionViewController: UIViewController {
 
     let manager: S3ObjectManager
     let fetchRequest: NSFetchRequest<S3Object>
-
-    weak var delegate: ObjectCollectionViewControllerDelegate?
 
     private var collectionView: UICollectionView!
     private var diffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
@@ -26,6 +20,7 @@ class ObjectCollectionViewController: UIViewController {
     init(manager: S3ObjectManager, fetchRequest: NSFetchRequest<S3Object>) {
         self.manager = manager
         self.fetchRequest = fetchRequest
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -36,6 +31,14 @@ class ObjectCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        addObjectCollectionView()
+
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+    }
+
+    private func addObjectCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.minimumLineSpacing = 2
         flowLayout.minimumInteritemSpacing = 2
@@ -54,10 +57,6 @@ class ObjectCollectionViewController: UIViewController {
         collectionView.dataSource = diffableDataSource
 
         view.addSubview(collectionView)
-
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
     }
 }
 
@@ -73,7 +72,18 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
 
         switch object.type {
         case .folder:
-            delegate?.objectCollectionViewController(self, didSelectFolderObject: object)
+            let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
+            fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", object.key!, object.key!)
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
+
+            let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
+            objectCollectionViewController.title = object.key?.split(separator: "/").last.map(String.init)
+
+            navigationController?.pushViewController(objectCollectionViewController, animated: true)
+
+            Task {
+                try await manager.listObjects(prefix: object.key!)
+            }
         case .photo, .video:
             let objects = fetchedResultsController.fetchedObjects?.filter({ $0.type == .photo || $0.type == .video }) ?? []
             let previewViewController = ObjectsPreviewViewController(manager: manager, objects: objects, currentObject: object)

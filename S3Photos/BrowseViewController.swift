@@ -8,13 +8,22 @@
 import CoreData
 import UIKit
 
-class BrowseViewController: UIViewController, ObjectCollectionViewControllerDelegate {
+class BrowseViewController: UIViewController {
 
     let prefix: String
 
-    init(prefix: String) {
+    init(prefix: String = "") {
         self.prefix = prefix
+
         super.init(nibName: nil, bundle: nil)
+
+        title = "Browse"
+
+        tabBarItem = UITabBarItem(
+            title: "Browse",
+            image: UIImage(systemName: "photo.circle"),
+            selectedImage: UIImage(systemName: "photo.circle.fill")
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -37,7 +46,6 @@ class BrowseViewController: UIViewController, ObjectCollectionViewControllerDele
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
 
         let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
-        objectCollectionViewController.delegate = self
 
         addChild(objectCollectionViewController)
         view.addSubview(objectCollectionViewController.view)
@@ -52,10 +60,5 @@ class BrowseViewController: UIViewController, ObjectCollectionViewControllerDele
         Task {
             try await manager.listObjects(prefix: prefix)
         }
-    }
-
-    func objectCollectionViewController(_ viewController: ObjectCollectionViewController, didSelectFolderObject object: S3Object) {
-        let browseViewController = BrowseViewController(prefix: object.key!)
-        navigationController?.pushViewController(browseViewController, animated: true)
     }
 }
