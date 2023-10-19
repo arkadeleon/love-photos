@@ -10,7 +10,6 @@
 		352633582AC2ABDD00CA7060 /* ObjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */; };
 		3526335A2AC2AE3300CA7060 /* ObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */; };
 		3532DBD02ADD11B0000898CE /* S3ObjectCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */; };
-		3532DBD22ADD198B000898CE /* S3ObjectThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD12ADD198B000898CE /* S3ObjectThumbnailCache.swift */; };
 		3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */; };
 		3532DBD62ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */; };
 		3532DBD82ADD3A07000898CE /* ObjectsPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD72ADD3A07000898CE /* ObjectsPreviewViewController.swift */; };
@@ -34,7 +33,6 @@
 		352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectCollectionViewController.swift; sourceTree = "<group>"; };
 		352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectCache.swift; sourceTree = "<group>"; };
-		3532DBD12ADD198B000898CE /* S3ObjectThumbnailCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectThumbnailCache.swift; sourceTree = "<group>"; };
 		3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "S3Object+Type.swift"; sourceTree = "<group>"; };
 		3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoObjectPreviewViewController.swift; sourceTree = "<group>"; };
 		3532DBD72ADD3A07000898CE /* ObjectsPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectsPreviewViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +99,6 @@
 				3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */,
 				3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */,
 				3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */,
-				3532DBD12ADD198B000898CE /* S3ObjectThumbnailCache.swift */,
 				3598A7562AC18B7B00806CC3 /* PersistenceController.swift */,
 				3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */,
 				3598A72C2AC188AB00806CC3 /* Assets.xcassets */,
@@ -208,7 +205,6 @@
 				3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */,
 				3526335A2AC2AE3300CA7060 /* ObjectCollectionViewCell.swift in Sources */,
 				3532DBD62ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift in Sources */,
-				3532DBD22ADD198B000898CE /* S3ObjectThumbnailCache.swift in Sources */,
 				3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */,
 				3532DBDA2ADE28DC000898CE /* VideoObjectPreviewViewController.swift in Sources */,
 				352633582AC2ABDD00CA7060 /* ObjectCollectionViewController.swift in Sources */,

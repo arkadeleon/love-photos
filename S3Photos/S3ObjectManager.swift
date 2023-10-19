@@ -17,7 +17,6 @@ class S3ObjectManager {
     private let s3: S3
 
     private let cache: S3ObjectCache
-    private let thumbnailCache: S3ObjectThumbnailCache
 
     init(account: S3Account) {
         self.account = account
@@ -29,7 +28,6 @@ class S3ObjectManager {
         s3 = S3(client: client, endpoint: account.endpoint!)
 
         cache = S3ObjectCache(account: account)
-        thumbnailCache = S3ObjectThumbnailCache(account: account)
     }
 
     func listObjects(prefix: String) async throws {
@@ -101,7 +99,7 @@ class S3ObjectManager {
         case .folder:
             return nil
         case .photo:
-            if let thumbnail = thumbnailCache.thumbnail(for: object) {
+            if let thumbnail = cache.thumbnail(for: object) {
                 return thumbnail
             }
 
@@ -114,11 +112,11 @@ class S3ObjectManager {
             }
 
             cache.setData(data, forObject: object)
-            thumbnailCache.setThumbnail(thumbnail, forObject: object)
+            cache.setThumbnail(thumbnail, forObject: object)
 
             return thumbnail
         case .video:
-            if let thumbnail = thumbnailCache.thumbnail(for: object) {
+            if let thumbnail = cache.thumbnail(for: object) {
                 return thumbnail
             }
 
@@ -135,7 +133,7 @@ class S3ObjectManager {
             }
 
             if let thumbnail {
-                thumbnailCache.setThumbnail(thumbnail, forObject: object)
+                cache.setThumbnail(thumbnail, forObject: object)
             }
 
             return thumbnail
