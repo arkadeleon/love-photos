@@ -1,1 +1,1 @@
-# s3-photos
+# S3 Photos
