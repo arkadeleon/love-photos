@@ -46,14 +46,23 @@ class AccountCollectionViewController: UIViewController {
             \(account.endpoint!)
             \(account.bucket!)
             """
-
             cell.contentConfiguration = contentConfiguration
+
+            let clearCache = UIAction(title: "Clear Cache", image: UIImage(systemName: "trash"), attributes: [.destructive]) { _ in
+                PersistenceController.shared.deleteAllObjects(for: account)
+            }
+            let menu = UIMenu(options: .displayInline, children: [clearCache])
+            let button = UIButton(type: .custom)
+            button.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
+            button.menu = menu
+            button.showsMenuAsPrimaryAction = true
+            let checkmark = UICellAccessory.checkmark(options: .init(isHidden: !account.isActive))
+            let more = UICellAccessory.customView(configuration: .init(customView: button, placement: .trailing(displayed: .always, at: UICellAccessory.Placement.position(before: checkmark))))
+            cell.accessories = [checkmark, more]
         }
 
         diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
-            let account = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Account
             let cell = collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: objectID)
-            cell.accessories = account.isActive ? [.checkmark()] : []
             return cell
         }
         collectionView.dataSource = diffableDataSource

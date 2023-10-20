@@ -39,6 +39,17 @@ class PersistenceController {
         })
     }
 
+    func deleteAllObjects(for account: S3Account) {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "S3Object")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do {
+            try container.persistentStoreCoordinator.execute(deleteRequest, with: container.viewContext)
+        } catch {
+            
+        }
+    }
+
     func saveContext() {
         let context = container.viewContext
         if context.hasChanges {
