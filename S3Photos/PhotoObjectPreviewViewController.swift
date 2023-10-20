@@ -27,7 +27,7 @@ class PhotoObjectPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
 
         imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,11 +40,12 @@ class PhotoObjectPreviewViewController: UIViewController {
         imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         Task {
-            let thumbnail = try await manager.thumbnailForObject(object)
-            self.imageView.image = thumbnail
+            for try await thumbnail in manager.thumbnailStreamForObject(object) {
+                imageView.image = thumbnail
+            }
 
             let preview = try await manager.previewForObject(object)
-            self.imageView.image = preview
+            imageView.image = preview
         }
     }
 }

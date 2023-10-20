@@ -28,6 +28,7 @@
 		3598A75E2AC2873800806CC3 /* SotoS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 3598A75D2AC2873800806CC3 /* SotoS3 */; };
 		3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */; };
 		35B2BBD62AE131FC0041AE5C /* S3ObjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */; };
+		35B2BBDA2AE25B100041AE5C /* FolderObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		3598A7562AC18B7B00806CC3 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
 		3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectManager.swift; sourceTree = "<group>"; };
 		35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectService.swift; sourceTree = "<group>"; };
+		35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderObjectCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				3532DBE52ADFD30C000898CE /* AccountsViewController.swift */,
 				3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */,
 				352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */,
+				35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */,
 				352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */,
 				3532DBD72ADD3A07000898CE /* ObjectsPreviewViewController.swift */,
 				3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */,
@@ -207,6 +210,7 @@
 				3532DBDC2ADE6524000898CE /* BrowseViewController.swift in Sources */,
 				3532DBDE2ADE652E000898CE /* DownloadedViewController.swift in Sources */,
 				3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */,
+				35B2BBDA2AE25B100041AE5C /* FolderObjectCollectionViewCell.swift in Sources */,
 				3526335A2AC2AE3300CA7060 /* ObjectCollectionViewCell.swift in Sources */,
 				3532DBD62ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift in Sources */,
 				3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */,

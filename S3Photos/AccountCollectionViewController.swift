@@ -32,8 +32,8 @@ class AccountCollectionViewController: UIViewController {
         let listLayout = UICollectionViewCompositionalLayout.list(using: listConfiguration)
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: listLayout)
-        collectionView.delegate = self
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.delegate = self
 
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { cell, indexPath, objectID in
             let account = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Account

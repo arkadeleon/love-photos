@@ -24,8 +24,8 @@ class S3ObjectManager {
         service = S3ObjectService(account: account)
     }
 
-    func listObjects(prefix: String) async throws {
-        let objs = try await service.listObjects(prefix: prefix)
+    func listObjects(prefix: String, maxKeys: Int? = nil) async throws {
+        let objs = try await service.listObjects(prefix: prefix, maxKeys: maxKeys)
 
         let context = PersistenceController.shared.container.viewContext
 
@@ -61,60 +61,33 @@ class S3ObjectManager {
         return url
     }
 
-    func thumbnailForObject(_ object: S3Object) async throws -> UIImage? {
-        guard let key = object.key else {
-            return nil
-        }
-
-        switch object.type {
-        case .folder:
-            return nil
-        case .photo:
-            if let thumbnail = cache.thumbnail(for: object) {
-                return thumbnail
-            }
-
-            let data = try await service.getObject(key: object.key!)
-
-            guard let thumbnail = downsampledImage(data: data, to: CGSize(width: 200, height: 200), scale: 1) else {
-                return nil
-            }
-
-            cache.setData(data, forObject: object)
-            cache.setThumbnail(thumbnail, forObject: object)
-
-            return thumbnail
-        case .video:
-            if let thumbnail = cache.thumbnail(for: object) {
-                return thumbnail
-            }
-
-            let url = try await service.signObject(key: object.key!)
-
-            let asset = AVAsset(url: url)
-            let assetImageGenerator = AVAssetImageGenerator(asset: asset)
-            assetImageGenerator.appliesPreferredTrackTransform = true
-            let thumbnail = await withCheckedContinuation { continuation in
-                assetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
-                    continuation.resume(returning: image.flatMap(UIImage.init))
+    func thumbnailStreamForObject(_ object: S3Object, count: Int = 1) -> AsyncThrowingStream<UIImage, Error> {
+        AsyncThrowingStream { continuation in
+            Task {
+                switch object.type {
+                case .folder:
+                    var objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
+                    if objects.isEmpty {
+                        try await listObjects(prefix: object.key!, maxKeys: count)
+                        objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
+                    }
+                    for object in objects.prefix(count) {
+                        for try await thumbnail in thumbnailStreamForObject(object) {
+                            continuation.yield(thumbnail)
+                        }
+                    }
+                    continuation.finish()
+                default:
+                    if let thumbnail = try await thumbnailForObject(object) {
+                        continuation.yield(thumbnail)
+                    }
+                    continuation.finish()
                 }
             }
-
-            if let thumbnail {
-                cache.setThumbnail(thumbnail, forObject: object)
-            }
-
-            return thumbnail
-        case .other:
-            return nil
         }
     }
 
     func previewForObject(_ object: S3Object) async throws -> UIImage? {
-        guard let key = object.key else {
-            return nil
-        }
-
         guard object.type == .photo else {
             return nil
         }
@@ -129,6 +102,51 @@ class S3ObjectManager {
 
         return UIImage(data: data)
     }
+}
+
+extension S3ObjectManager {
+    private func thumbnailForObject(_ object: S3Object) async throws -> UIImage? {
+        switch object.type {
+        case .photo:
+            if let thumbnail = cache.thumbnail(for: object) {
+                return thumbnail
+            }
+
+            let data = try await service.getObject(key: object.key!)
+            let thumbnail = downsampledImage(data: data, to: CGSize(width: 200, height: 200), scale: 1)
+
+            if let thumbnail {
+                cache.setData(data, forObject: object)
+                cache.setThumbnail(thumbnail, forObject: object)
+            }
+
+            return thumbnail
+        case .video:
+            if let thumbnail = cache.thumbnail(for: object) {
+                return thumbnail
+            }
+
+            let url = try await service.signObject(key: object.key!)
+            let asset = AVAsset(url: url)
+            let assetImageGenerator = AVAssetImageGenerator(asset: asset)
+            assetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
+            assetImageGenerator.appliesPreferredTrackTransform = true
+
+            let thumbnail = await withCheckedContinuation { continuation in
+                assetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
+                    continuation.resume(returning: image.flatMap(UIImage.init))
+                }
+            }
+
+            if let thumbnail {
+                cache.setThumbnail(thumbnail, forObject: object)
+            }
+
+            return thumbnail
+        default:
+            return nil
+        }
+    }
 
     private func downsampledImage(data: Data, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
         let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
@@ -136,7 +154,7 @@ class S3ObjectManager {
             return nil
         }
 
-        let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
+        let maxDimensionInPixels = Swift.max(pointSize.width, pointSize.height) * scale
         let downsampleOptions: [CFString : Any] = [
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceShouldCacheImmediately: true,

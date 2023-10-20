@@ -39,6 +39,13 @@ class PersistenceController {
         })
     }
 
+    func fetchObjects(for account: S3Account, prefix: String) throws -> [S3Object] {
+        let fetchRequest = S3Object.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
+        let result = try container.viewContext.fetch(fetchRequest)
+        return result
+    }
+
     func deleteAllObjects(for account: S3Account) {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "S3Object")
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -46,7 +53,7 @@ class PersistenceController {
         do {
             try container.persistentStoreCoordinator.execute(deleteRequest, with: container.viewContext)
         } catch {
-            
+
         }
     }
 

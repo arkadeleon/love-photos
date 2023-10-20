@@ -41,7 +41,7 @@ class BrowseViewController: UIViewController {
     private func addObjectCollectionViewController(withAccount account: S3Account) {
         let manager = S3ObjectManager(account: account)
 
-        let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
+        let fetchRequest = S3Object.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
 

@@ -29,7 +29,7 @@ class VideoObjectPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
 
         let thumbnailView = UIImageView()
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
@@ -42,8 +42,9 @@ class VideoObjectPreviewViewController: UIViewController {
         thumbnailView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         Task {
-            let thumbnail = try await manager.thumbnailForObject(object)
-            thumbnailView.image = thumbnail
+            for try await thumbnail in manager.thumbnailStreamForObject(object) {
+                thumbnailView.image = thumbnail
+            }
 
             guard let url = try await manager.urlForObject(object) else {
                 return

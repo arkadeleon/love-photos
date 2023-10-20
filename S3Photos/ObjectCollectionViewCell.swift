@@ -15,10 +15,9 @@ class ObjectCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        contentView.backgroundColor = .secondarySystemBackground
-
         thumbnailView = UIImageView()
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView.backgroundColor = .secondarySystemBackground
         thumbnailView.contentMode = .scaleAspectFill
         thumbnailView.clipsToBounds = true
         contentView.addSubview(thumbnailView)
@@ -43,8 +42,9 @@ class ObjectCollectionViewCell: UICollectionViewCell {
     func configure(withManager manager: S3ObjectManager, object: S3Object) {
         thumbnailView.image = nil
         Task {
-            let thumbnail = try await manager.thumbnailForObject(object)
-            thumbnailView.image = thumbnail
+            for try await thumbnail in manager.thumbnailStreamForObject(object) {
+                thumbnailView.image = thumbnail
+            }
         }
 
         nameLabel.text = object.key?.split(separator: "/").last.map(String.init)

@@ -21,11 +21,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let browseViewController = BrowseViewController()
         let browseNavigationController = UINavigationController(rootViewController: browseViewController)
-        browseNavigationController.hidesBarsOnSwipe = true
 
         let downloadedViewController = DownloadedViewController()
         let downloadedNavigationController = UINavigationController(rootViewController: downloadedViewController)
-        downloadedNavigationController.hidesBarsOnSwipe = true
 
         let accountsViewController = AccountsViewController()
         let accountsNavigationController = UINavigationController(rootViewController: accountsViewController)

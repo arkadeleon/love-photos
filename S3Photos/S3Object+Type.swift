@@ -22,9 +22,11 @@ extension S3Object {
 
         let ext = (key! as NSString).pathExtension.lowercased()
         switch ext {
-        case "jpg":
+        case "heic", 
+             "jpg":
             return .photo
-        case "mov":
+        case "mov", 
+             "mp4":
             return .video
         default:
             return .other

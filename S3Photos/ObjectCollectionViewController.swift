@@ -46,13 +46,27 @@ class ObjectCollectionViewController: UIViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.delegate = self
-        collectionView.register(ObjectCollectionViewCell.self, forCellWithReuseIdentifier: "S3ObjectCollectionViewCell")
 
-        diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "S3ObjectCollectionViewCell", for: indexPath) as! ObjectCollectionViewCell
+        let folderObjectCellRegistration = UICollectionView.CellRegistration<FolderObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
             let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
             cell.configure(withManager: self.manager, object: object)
-            return cell
+        }
+
+        let objectCellRegistration = UICollectionView.CellRegistration<ObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
+            cell.configure(withManager: self.manager, object: object)
+        }
+
+        diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
+            let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
+            switch object.type {
+            case .folder:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: folderObjectCellRegistration, for: indexPath, item: objectID)
+                return cell
+            default:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: objectCellRegistration, for: indexPath, item: objectID)
+                return cell
+            }
         }
         collectionView.dataSource = diffableDataSource
 
@@ -96,11 +110,28 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
 
 extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let numberOfCells: CGFloat = 3
-        let width = floor((collectionView.bounds.size.width - (numberOfCells - 1) * 2) / numberOfCells)
-        let height = width
-        let size = CGSize(width: width, height: height)
-        return size
+        guard let itemIdentifier = diffableDataSource.itemIdentifier(for: indexPath) else {
+            return .zero
+        }
+
+        guard let object = PersistenceController.shared.container.viewContext.object(with: itemIdentifier) as? S3Object else {
+            return .zero
+        }
+
+        switch object.type {
+        case .folder:
+            let numberOfCells: CGFloat = 2
+            let width = floor((collectionView.bounds.size.width - (numberOfCells - 1) * 2) / numberOfCells)
+            let height = width
+            let size = CGSize(width: width, height: height)
+            return size
+        default:
+            let numberOfCells: CGFloat = 3
+            let width = floor((collectionView.bounds.size.width - (numberOfCells - 1) * 2) / numberOfCells)
+            let height = width
+            let size = CGSize(width: width, height: height)
+            return size
+        }
     }
 }
 
