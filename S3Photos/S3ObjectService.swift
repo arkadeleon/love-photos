@@ -24,8 +24,8 @@ class S3ObjectService {
         s3 = S3(client: client, endpoint: account.endpoint!)
     }
 
-    func listObjects(prefix: String, maxKeys: Int?) async throws -> [S3.Object] {
-        let request = S3.ListObjectsV2Request(bucket: account.bucket!, delimiter: "/", maxKeys: maxKeys, prefix: prefix)
+    func listObjects(prefix: String) async throws -> [S3.Object] {
+        let request = S3.ListObjectsV2Request(bucket: account.bucket!, delimiter: "/", prefix: prefix)
         let response = try await s3.listObjectsV2(request)
 
         var objects = [S3.Object]()

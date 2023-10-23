@@ -24,8 +24,8 @@ class S3ObjectManager {
         service = S3ObjectService(account: account)
     }
 
-    func listObjects(prefix: String, maxKeys: Int? = nil) async throws {
-        let objs = try await service.listObjects(prefix: prefix, maxKeys: maxKeys)
+    func listObjects(prefix: String) async throws {
+        let objs = try await service.listObjects(prefix: prefix)
 
         let context = PersistenceController.shared.container.viewContext
 
@@ -47,6 +47,7 @@ class S3ObjectManager {
             object.key = obj.key
             object.lastModified = obj.lastModified
             object.size = obj.size ?? 0
+            object.isGroup = object.type == .group
 
             try context.save()
         }
@@ -65,10 +66,10 @@ class S3ObjectManager {
         AsyncThrowingStream { continuation in
             Task {
                 switch object.type {
-                case .folder:
+                case .group:
                     var objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
                     if objects.isEmpty {
-                        try await listObjects(prefix: object.key!, maxKeys: count)
+                        try await listObjects(prefix: object.key!)
                         objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
                     }
                     for object in objects.prefix(count) {
@@ -112,11 +113,22 @@ extension S3ObjectManager {
                 return thumbnail
             }
 
-            let data = try await service.getObject(key: object.key!)
-            let thumbnail = downsampledImage(data: data, to: CGSize(width: 200, height: 200), scale: 1)
+            let url = try await service.signObject(key: object.key!)
+            let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+                return nil
+            }
+
+            let downsampleOptions: [CFString : Any] = [
+                kCGImageSourceCreateThumbnailFromImageAlways: true,
+                kCGImageSourceShouldCacheImmediately: true,
+                kCGImageSourceCreateThumbnailWithTransform: true,
+                kCGImageSourceThumbnailMaxPixelSize: 200
+            ]
+            let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions as CFDictionary)
+            let thumbnail = downsampledImage.map(UIImage.init)
 
             if let thumbnail {
-                cache.setData(data, forObject: object)
                 cache.setThumbnail(thumbnail, forObject: object)
             }
 
@@ -146,22 +158,5 @@ extension S3ObjectManager {
         default:
             return nil
         }
-    }
-
-    private func downsampledImage(data: Data, to pointSize: CGSize, scale: CGFloat) -> UIImage? {
-        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-        guard let imageSource = CGImageSourceCreateWithData(data as CFData, imageSourceOptions) else {
-            return nil
-        }
-
-        let maxDimensionInPixels = Swift.max(pointSize.width, pointSize.height) * scale
-        let downsampleOptions: [CFString : Any] = [
-            kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceShouldCacheImmediately: true,
-            kCGImageSourceCreateThumbnailWithTransform: true,
-            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
-        ]
-        let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions as CFDictionary)
-        return downsampledImage.map(UIImage.init)
     }
 }

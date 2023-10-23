@@ -11,6 +11,7 @@
         <attribute name="creationDate" optional="YES" attributeType="String"/>
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="eTag" optional="YES" attributeType="String"/>
+        <attribute name="isGroup" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="key" attributeType="String"/>
         <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="pixelHeight" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>

@@ -22,7 +22,7 @@ class AccountCollectionViewController: UIViewController {
         let fetchRequest = NSFetchRequest<S3Account>(entityName: "S3Account")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: "objectID", cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
     }
@@ -36,7 +36,7 @@ class AccountCollectionViewController: UIViewController {
         collectionView.delegate = self
 
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let account = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Account
+            let account = self.fetchedResultsController.object(at: indexPath)
 
             var contentConfiguration = cell.defaultContentConfiguration()
             contentConfiguration.image = UIImage(systemName: "person.circle")
@@ -73,12 +73,11 @@ class AccountCollectionViewController: UIViewController {
 
 extension AccountCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let objectIDs = diffableDataSource.snapshot().itemIdentifiers
-        let selectedObjectID = diffableDataSource.itemIdentifier(for: indexPath)
+        let accounts = fetchedResultsController.fetchedObjects ?? []
+        let selectedAccount = fetchedResultsController.object(at: indexPath)
 
-        for objectID in objectIDs {
-            let account = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Account
-            account.isActive = objectID == selectedObjectID
+        for account in accounts {
+            account.isActive = account == selectedAccount
         }
 
         PersistenceController.shared.saveContext()

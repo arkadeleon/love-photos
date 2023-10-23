@@ -33,21 +33,19 @@ class ObjectCollectionViewController: UIViewController {
 
         addObjectCollectionView()
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: "isGroup", cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
     }
 
     private func addObjectCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.minimumLineSpacing = 2
-        flowLayout.minimumInteritemSpacing = 2
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.delegate = self
 
-        let folderObjectCellRegistration = UICollectionView.CellRegistration<FolderObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+        let groupObjectCellRegistration = UICollectionView.CellRegistration<GroupObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
             let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
             cell.configure(withManager: self.manager, object: object)
         }
@@ -60,8 +58,8 @@ class ObjectCollectionViewController: UIViewController {
         diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
             let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
             switch object.type {
-            case .folder:
-                let cell = collectionView.dequeueConfiguredReusableCell(using: folderObjectCellRegistration, for: indexPath, item: objectID)
+            case .group:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: groupObjectCellRegistration, for: indexPath, item: objectID)
                 return cell
             default:
                 let cell = collectionView.dequeueConfiguredReusableCell(using: objectCellRegistration, for: indexPath, item: objectID)
@@ -76,16 +74,9 @@ class ObjectCollectionViewController: UIViewController {
 
 extension ObjectCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let itemIdentifier = diffableDataSource.itemIdentifier(for: indexPath) else {
-            return
-        }
-
-        guard let object = PersistenceController.shared.container.viewContext.object(with: itemIdentifier) as? S3Object else {
-            return
-        }
-
+        let object = fetchedResultsController.object(at: indexPath)
         switch object.type {
-        case .folder:
+        case .group:
             let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
             fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", object.key!, object.key!)
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
@@ -110,20 +101,13 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
 
 extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        guard let itemIdentifier = diffableDataSource.itemIdentifier(for: indexPath) else {
-            return .zero
-        }
-
-        guard let object = PersistenceController.shared.container.viewContext.object(with: itemIdentifier) as? S3Object else {
-            return .zero
-        }
-
+        let object = fetchedResultsController.object(at: indexPath)
         switch object.type {
-        case .folder:
+        case .group:
             let numberOfCells: CGFloat = 2
-            let width = floor((collectionView.bounds.size.width - (numberOfCells - 1) * 2) / numberOfCells)
+            let width = floor((collectionView.bounds.size.width - (numberOfCells + 1) * 16) / numberOfCells)
             let height = width
-            let size = CGSize(width: width, height: height)
+            let size = CGSize(width: width, height: height + 30)
             return size
         default:
             let numberOfCells: CGFloat = 3
@@ -131,6 +115,33 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
             let height = width
             let size = CGSize(width: width, height: height)
             return size
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        switch fetchedResultsController.sectionIndexTitles[section] {
+        case "1":
+            return UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        default:
+            return UIEdgeInsets.zero
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        switch fetchedResultsController.sectionIndexTitles[section] {
+        case "1":
+            return 16
+        default:
+            return 2
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        switch fetchedResultsController.sectionIndexTitles[section] {
+        case "1":
+            return 16
+        default:
+            return 2
         }
     }
 }

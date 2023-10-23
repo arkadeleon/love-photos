@@ -8,7 +8,7 @@
 import Foundation
 
 enum S3ObjectType {
-    case folder
+    case group
     case photo
     case video
     case other
@@ -17,7 +17,7 @@ enum S3ObjectType {
 extension S3Object {
     var type: S3ObjectType {
         if key!.hasSuffix("/") {
-            return .folder
+            return .group
         }
 
         let ext = (key! as NSString).pathExtension.lowercased()
@@ -25,7 +25,8 @@ extension S3Object {
         case "heic", 
              "jpg":
             return .photo
-        case "mov", 
+        case "avi",
+             "mov",
              "mp4":
             return .video
         default:
