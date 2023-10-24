@@ -47,6 +47,6 @@ class ObjectCollectionViewCell: UICollectionViewCell {
             }
         }
 
-        nameLabel.text = object.key?.split(separator: "/").last.map(String.init)
+        nameLabel.text = object.name
     }
 }

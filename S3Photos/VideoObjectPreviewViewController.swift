@@ -19,7 +19,10 @@ class VideoObjectPreviewViewController: UIViewController {
     init(manager: S3ObjectManager, object: S3Object) {
         self.manager = manager
         self.object = object
+
         super.init(nibName: nil, bundle: nil)
+
+        title = object.name
     }
 
     required init?(coder: NSCoder) {

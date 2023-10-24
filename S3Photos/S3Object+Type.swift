@@ -15,6 +15,10 @@ enum S3ObjectType {
 }
 
 extension S3Object {
+    var name: String? {
+        key?.split(separator: "/").last.map(String.init)
+    }
+
     var type: S3ObjectType {
         if key!.hasSuffix("/") {
             return .group

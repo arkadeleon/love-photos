@@ -46,17 +46,17 @@ class ObjectCollectionViewController: UIViewController {
         collectionView.delegate = self
 
         let groupObjectCellRegistration = UICollectionView.CellRegistration<GroupObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
+            let object = self.fetchedResultsController.object(at: indexPath)
             cell.configure(withManager: self.manager, object: object)
         }
 
         let objectCellRegistration = UICollectionView.CellRegistration<ObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
+            let object = self.fetchedResultsController.object(at: indexPath)
             cell.configure(withManager: self.manager, object: object)
         }
 
         diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
-            let object = PersistenceController.shared.container.viewContext.object(with: objectID) as! S3Object
+            let object = self.fetchedResultsController.object(at: indexPath)
             switch object.type {
             case .group:
                 let cell = collectionView.dequeueConfiguredReusableCell(using: groupObjectCellRegistration, for: indexPath, item: objectID)
@@ -82,7 +82,7 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
             fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
 
             let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
-            objectCollectionViewController.title = object.key?.split(separator: "/").last.map(String.init)
+            objectCollectionViewController.title = object.name
 
             navigationController?.pushViewController(objectCollectionViewController, animated: true)
 
@@ -91,8 +91,8 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
             }
         case .photo, .video:
             let objects = fetchedResultsController.fetchedObjects?.filter({ $0.type == .photo || $0.type == .video }) ?? []
-            let previewViewController = ObjectsPreviewViewController(manager: manager, objects: objects, currentObject: object)
-            present(previewViewController, animated: true)
+            let previewNavigationController = ObjectPreviewNavigationController(manager: manager, object: object, objects: objects)
+            present(previewNavigationController, animated: true)
         case .other:
             break
         }
