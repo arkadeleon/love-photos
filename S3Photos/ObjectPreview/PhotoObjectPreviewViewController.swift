@@ -13,7 +13,8 @@ class PhotoObjectPreviewViewController: UIViewController {
     let object: S3Object
 
     var scrollView: UIScrollView!
-    var imageView: UIImageView!
+    var previewView: UIImageView!
+    var thumbnailView: UIImageView!
 
     init(manager: S3ObjectManager, object: S3Object) {
         self.manager = manager
@@ -38,17 +39,24 @@ class PhotoObjectPreviewViewController: UIViewController {
         scrollView.delegate = self
         view.addSubview(scrollView)
 
-        imageView = UIImageView()
-        scrollView.addSubview(imageView)
+        previewView = UIImageView()
+        scrollView.addSubview(previewView)
+
+        thumbnailView = UIImageView(frame: view.bounds)
+        thumbnailView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        thumbnailView.contentMode = .scaleAspectFit
+        view.addSubview(thumbnailView)
 
         Task {
             for try await thumbnail in manager.thumbnailStreamForObject(object) {
-                imageView.image = thumbnail
+                thumbnailView.image = thumbnail
             }
 
             if let preview = try await manager.previewForObject(object) {
-                imageView.image = preview
-                imageView.frame = CGRect(x: 0, y: 0, width: preview.size.width, height: preview.size.height)
+                thumbnailView.isHidden = true
+
+                previewView.image = preview
+                previewView.frame = CGRect(x: 0, y: 0, width: preview.size.width, height: preview.size.height)
                 scrollView.contentSize = preview.size
 
                 updateZoomScale(with: preview.size)
@@ -88,7 +96,7 @@ class PhotoObjectPreviewViewController: UIViewController {
 
 extension PhotoObjectPreviewViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        imageView
+        previewView
     }
 
     func scrollViewDidZoom(_ scrollView: UIScrollView) {

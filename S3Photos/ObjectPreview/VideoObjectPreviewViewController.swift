@@ -44,6 +44,15 @@ class VideoObjectPreviewViewController: UIViewController {
         thumbnailView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         thumbnailView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
+        let progressView = UIProgressView(progressViewStyle: .bar)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressView.layer.zPosition = 1
+        view.addSubview(progressView)
+
+        progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
         Task {
             for try await thumbnail in manager.thumbnailStreamForObject(object) {
                 thumbnailView.image = thumbnail
@@ -53,22 +62,32 @@ class VideoObjectPreviewViewController: UIViewController {
                 return
             }
 
-            let player = AVPlayer(url: url)
-            player.play()
+            let item = AVPlayerItem(url: url)
+            let player = AVPlayer(playerItem: item)
 
-            KeyValueObservingPublisher(object: player, keyPath: \.status, options: [])
-                .sink(receiveValue: { status in
-                    if status == .readyToPlay {
+            let layer = AVPlayerLayer(player: player)
+            layer.backgroundColor = UIColor.systemBackground.cgColor
+            layer.frame = view.bounds
+            layer.videoGravity = .resizeAspect
+
+            let interval = CMTime(seconds: 1, preferredTimescale: 1)
+            player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { currentTime in
+                let progress = Float(currentTime.seconds) / Float(item.duration.seconds)
+                if !progress.isNaN {
+                    progressView.progress = progress
+                }
+            }
+
+            KeyValueObservingPublisher(object: layer, keyPath: \.isReadyForDisplay, options: [])
+                .sink(receiveValue: { isReadyForDisplay in
+                    if isReadyForDisplay {
                         thumbnailView.image = nil
-
-                        let layer = AVPlayerLayer(player: player)
-                        layer.backgroundColor = UIColor.black.cgColor
-                        layer.frame = self.view.bounds
-                        layer.videoGravity = .resizeAspect
                         self.view.layer.addSublayer(layer)
                     }
                 })
                 .store(in: &subscriptions)
+
+            player.play()
         }
     }
 }

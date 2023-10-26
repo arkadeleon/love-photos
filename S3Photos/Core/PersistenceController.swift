@@ -6,12 +6,14 @@
 //
 
 import CoreData
+import SotoS3
 
 class PersistenceController {
 
     static let shared = PersistenceController()
 
     let container: NSPersistentContainer
+    let context: NSManagedObjectContext
 
     init() {
         /*
@@ -37,28 +39,55 @@ class PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+
+        context = container.newBackgroundContext()
+        context.automaticallyMergesChangesFromParent = true
     }
 
-    func fetchObjects(for account: S3Account, prefix: String) throws -> [S3Object] {
-        let fetchRequest = S3Object.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
-        let result = try container.viewContext.fetch(fetchRequest)
-        return result
+    func fetchObjects(for account: S3Account, prefix: String) async throws -> [S3Object] {
+        try context.performAndWait {
+            let fetchRequest = S3Object.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
+            return try context.fetch(fetchRequest)
+        }
     }
 
-    func deleteAllObjects(for account: S3Account) {
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "S3Object")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+    func insertObjects(_ objs: [S3.Object], prefix: String) async throws {
+        try context.performAndWait {
+            for obj in objs {
+                guard let key = obj.key else {
+                    continue
+                }
 
-        do {
-            try container.persistentStoreCoordinator.execute(deleteRequest, with: container.viewContext)
-        } catch {
+                let fetchRequest = S3Object.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "key == %@", key)
+                let result = try context.fetch(fetchRequest)
+                guard result.isEmpty else {
+                    continue
+                }
 
+                let object = S3Object(context: context)
+                object.prefix = prefix
+                object.eTag = obj.eTag
+                object.key = obj.key
+                object.lastModified = obj.lastModified
+                object.size = obj.size ?? 0
+                object.isGroup = object.type == .group
+            }
+
+            try context.save()
+        }
+    }
+
+    func deleteAllObjects(for account: S3Account) async throws {
+        try context.performAndWait {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "S3Object")
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            try self.container.persistentStoreCoordinator.execute(deleteRequest, with: context)
         }
     }
 
     func saveContext() {
-        let context = container.viewContext
         if context.hasChanges {
             do {
                 try context.save()

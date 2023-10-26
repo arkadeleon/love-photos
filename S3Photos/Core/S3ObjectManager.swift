@@ -25,32 +25,8 @@ class S3ObjectManager {
     }
 
     func listObjects(prefix: String) async throws {
-        let objs = try await service.listObjects(prefix: prefix)
-
-        let context = PersistenceController.shared.container.viewContext
-
-        for obj in objs {
-            guard let key = obj.key else {
-                continue
-            }
-
-            let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
-            fetchRequest.predicate = NSPredicate(format: "key == %@", key)
-            let result = try context.fetch(fetchRequest)
-            guard result.isEmpty else {
-                continue
-            }
-
-            let object = S3Object(context: context)
-            object.prefix = prefix
-            object.eTag = obj.eTag
-            object.key = obj.key
-            object.lastModified = obj.lastModified
-            object.size = obj.size ?? 0
-            object.isGroup = object.type == .group
-
-            try context.save()
-        }
+        let objects = try await service.listObjects(prefix: prefix)
+        try await PersistenceController.shared.insertObjects(objects, prefix: prefix)
     }
 
     func urlForObject(_ object: S3Object) async throws -> URL? {
@@ -67,10 +43,10 @@ class S3ObjectManager {
             Task {
                 switch object.type {
                 case .group:
-                    var objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
+                    var objects = try await PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
                     if objects.isEmpty {
                         try await listObjects(prefix: object.key!)
-                        objects = try PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
+                        objects = try await PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
                     }
                     for object in objects.prefix(count) {
                         for try await thumbnail in thumbnailStreamForObject(object) {

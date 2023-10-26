@@ -16,9 +16,6 @@ class ObjectPreviewNavigationController: UINavigationController {
         modalTransitionStyle = .coverVertical
         modalPresentationStyle = .fullScreen
 
-        
-
-
         isToolbarHidden = false
     }
 

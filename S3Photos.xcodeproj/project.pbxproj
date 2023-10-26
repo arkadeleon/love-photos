@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		352633582AC2ABDD00CA7060 /* ObjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */; };
-		3526335A2AC2AE3300CA7060 /* ObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */; };
+		3526335A2AC2AE3300CA7060 /* PhotoObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* PhotoObjectCollectionViewCell.swift */; };
 		3532DBD02ADD11B0000898CE /* S3ObjectCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */; };
 		3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */; };
 		3532DBD62ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */; };
@@ -30,11 +30,13 @@
 		35B2BBD62AE131FC0041AE5C /* S3ObjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */; };
 		35B2BBDA2AE25B100041AE5C /* GroupObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD92AE25B100041AE5C /* GroupObjectCollectionViewCell.swift */; };
 		35B2BBDC2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */; };
+		35B2BBE02AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */; };
+		35B2BBE22AE7AE4E0041AE5C /* OtherObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBE12AE7AE4E0041AE5C /* OtherObjectCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectCollectionViewController.swift; sourceTree = "<group>"; };
-		352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectCollectionViewCell.swift; sourceTree = "<group>"; };
+		352633592AC2AE3300CA7060 /* PhotoObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoObjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectCache.swift; sourceTree = "<group>"; };
 		3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "S3Object+Type.swift"; sourceTree = "<group>"; };
 		3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoObjectPreviewViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +59,8 @@
 		35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectService.swift; sourceTree = "<group>"; };
 		35B2BBD92AE25B100041AE5C /* GroupObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupObjectCollectionViewCell.swift; sourceTree = "<group>"; };
 		35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPreviewNavigationController.swift; sourceTree = "<group>"; };
+		35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoObjectCollectionViewCell.swift; sourceTree = "<group>"; };
+		35B2BBE12AE7AE4E0041AE5C /* OtherObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherObjectCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,24 +100,13 @@
 				3532DBDB2ADE6524000898CE /* BrowseViewController.swift */,
 				3532DBDD2ADE652E000898CE /* DownloadedViewController.swift */,
 				3532DBE52ADFD30C000898CE /* AccountsViewController.swift */,
-				3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */,
-				352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */,
-				35B2BBD92AE25B100041AE5C /* GroupObjectCollectionViewCell.swift */,
-				352633592AC2AE3300CA7060 /* ObjectCollectionViewCell.swift */,
-				35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */,
-				3532DBD72ADD3A07000898CE /* ObjectPreviewViewController.swift */,
-				3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */,
-				3532DBD92ADE28DC000898CE /* VideoObjectPreviewViewController.swift */,
-				3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */,
-				3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */,
-				35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */,
-				3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */,
-				3598A7562AC18B7B00806CC3 /* PersistenceController.swift */,
-				3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */,
+				35B2BBE62AE7C03F0041AE5C /* AccountCollection */,
+				35B2BBE32AE7AE970041AE5C /* ObjectCollection */,
+				35B2BBE52AE7AED90041AE5C /* ObjectPreview */,
+				35B2BBE72AE7C0680041AE5C /* Core */,
 				3598A72C2AC188AB00806CC3 /* Assets.xcassets */,
 				3598A72E2AC188AB00806CC3 /* LaunchScreen.storyboard */,
 				3598A7312AC188AB00806CC3 /* Info.plist */,
-				3598A7292AC188AA00806CC3 /* S3Photos.xcdatamodeld */,
 			);
 			path = S3Photos;
 			sourceTree = "<group>";
@@ -123,6 +116,51 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		35B2BBE32AE7AE970041AE5C /* ObjectCollection */ = {
+			isa = PBXGroup;
+			children = (
+				352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */,
+				35B2BBD92AE25B100041AE5C /* GroupObjectCollectionViewCell.swift */,
+				352633592AC2AE3300CA7060 /* PhotoObjectCollectionViewCell.swift */,
+				35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */,
+				35B2BBE12AE7AE4E0041AE5C /* OtherObjectCollectionViewCell.swift */,
+			);
+			path = ObjectCollection;
+			sourceTree = "<group>";
+		};
+		35B2BBE52AE7AED90041AE5C /* ObjectPreview */ = {
+			isa = PBXGroup;
+			children = (
+				35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */,
+				3532DBD72ADD3A07000898CE /* ObjectPreviewViewController.swift */,
+				3532DBD52ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift */,
+				3532DBD92ADE28DC000898CE /* VideoObjectPreviewViewController.swift */,
+			);
+			path = ObjectPreview;
+			sourceTree = "<group>";
+		};
+		35B2BBE62AE7C03F0041AE5C /* AccountCollection */ = {
+			isa = PBXGroup;
+			children = (
+				3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */,
+			);
+			path = AccountCollection;
+			sourceTree = "<group>";
+		};
+		35B2BBE72AE7C0680041AE5C /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */,
+				3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */,
+				35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */,
+				3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */,
+				3598A7562AC18B7B00806CC3 /* PersistenceController.swift */,
+				3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */,
+				3598A7292AC188AA00806CC3 /* S3Photos.xcdatamodeld */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +243,8 @@
 				3532DBD82ADD3A07000898CE /* ObjectPreviewViewController.swift in Sources */,
 				3598A72B2AC188AA00806CC3 /* S3Photos.xcdatamodeld in Sources */,
 				3598A7212AC188AA00806CC3 /* AppDelegate.swift in Sources */,
+				35B2BBE22AE7AE4E0041AE5C /* OtherObjectCollectionViewCell.swift in Sources */,
+				35B2BBE02AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift in Sources */,
 				3532DBE22ADFC0FE000898CE /* AccountCollectionViewController.swift in Sources */,
 				3532DBE62ADFD30C000898CE /* AccountsViewController.swift in Sources */,
 				3598A7232AC188AA00806CC3 /* SceneDelegate.swift in Sources */,
@@ -214,7 +254,7 @@
 				3532DBDE2ADE652E000898CE /* DownloadedViewController.swift in Sources */,
 				3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */,
 				35B2BBDA2AE25B100041AE5C /* GroupObjectCollectionViewCell.swift in Sources */,
-				3526335A2AC2AE3300CA7060 /* ObjectCollectionViewCell.swift in Sources */,
+				3526335A2AC2AE3300CA7060 /* PhotoObjectCollectionViewCell.swift in Sources */,
 				3532DBD62ADD2C9D000898CE /* PhotoObjectPreviewViewController.swift in Sources */,
 				35B2BBDC2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift in Sources */,
 				3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */,

@@ -33,9 +33,14 @@ class ObjectCollectionViewController: UIViewController {
 
         addObjectCollectionView()
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.container.viewContext, sectionNameKeyPath: "isGroup", cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.context, sectionNameKeyPath: "isGroup", cacheName: nil)
         fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
+
+        Task {
+            try await PersistenceController.shared.context.perform {
+                try self.fetchedResultsController.performFetch()
+            }
+        }
     }
 
     private func addObjectCollectionView() {
@@ -50,7 +55,17 @@ class ObjectCollectionViewController: UIViewController {
             cell.configure(withManager: self.manager, object: object)
         }
 
-        let objectCellRegistration = UICollectionView.CellRegistration<ObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+        let photoObjectCellRegistration = UICollectionView.CellRegistration<PhotoObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let object = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, object: object)
+        }
+
+        let videoObjectCellRegistration = UICollectionView.CellRegistration<VideoObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let object = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, object: object)
+        }
+
+        let otherObjectCellRegistration = UICollectionView.CellRegistration<OtherObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
             let object = self.fetchedResultsController.object(at: indexPath)
             cell.configure(withManager: self.manager, object: object)
         }
@@ -61,8 +76,14 @@ class ObjectCollectionViewController: UIViewController {
             case .group:
                 let cell = collectionView.dequeueConfiguredReusableCell(using: groupObjectCellRegistration, for: indexPath, item: objectID)
                 return cell
-            default:
-                let cell = collectionView.dequeueConfiguredReusableCell(using: objectCellRegistration, for: indexPath, item: objectID)
+            case .photo:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: photoObjectCellRegistration, for: indexPath, item: objectID)
+                return cell
+            case .video:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: videoObjectCellRegistration, for: indexPath, item: objectID)
+                return cell
+            case .other:
+                let cell = collectionView.dequeueConfiguredReusableCell(using: otherObjectCellRegistration, for: indexPath, item: objectID)
                 return cell
             }
         }
@@ -148,23 +169,27 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 extension ObjectCollectionViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        guard let dataSource = collectionView?.dataSource as? UICollectionViewDiffableDataSource<Int, NSManagedObjectID> else {
-            assertionFailure("The data source has not implemented snapshot support while it should")
-            return
-        }
-        var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-        let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-
-        let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-            guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-                return nil
+        Task {
+            await MainActor.run {
+                guard let dataSource = collectionView?.dataSource as? UICollectionViewDiffableDataSource<Int, NSManagedObjectID> else {
+                    assertionFailure("The data source has not implemented snapshot support while it should")
+                    return
+                }
+                var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+                let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+                
+                let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+                    guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+                        return nil
+                    }
+                    guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+                    return itemIdentifier
+                }
+                snapshot.reloadItems(reloadIdentifiers)
+                
+                let shouldAnimate = collectionView?.numberOfSections != 0
+                dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
             }
-            guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-            return itemIdentifier
         }
-        snapshot.reloadItems(reloadIdentifiers)
-
-        let shouldAnimate = collectionView?.numberOfSections != 0
-        dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
     }
 }

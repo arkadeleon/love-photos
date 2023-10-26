@@ -84,7 +84,7 @@ class AccountsViewController: UIViewController {
             let endpoint = endpointTextField.text
             let bucket = bucketTextField.text
 
-            let context = PersistenceController.shared.container.viewContext
+            let context = PersistenceController.shared.context
             let account = S3Account(context: context)
             account.accessKeyId = accessKeyId
             account.secretAccessKey = secretAccessKey

@@ -20,11 +20,11 @@ extension S3Object {
     }
 
     var type: S3ObjectType {
-        if key!.hasSuffix("/") {
+        if key?.hasSuffix("/") == true {
             return .group
         }
 
-        let ext = (key! as NSString).pathExtension.lowercased()
+        let ext = (key as NSString?)?.pathExtension.lowercased()
         switch ext {
         case "heic", 
              "jpg":

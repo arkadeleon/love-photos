@@ -1,16 +1,15 @@
 //
-//  ObjectCollectionViewCell.swift
+//  VideoObjectCollectionViewCell.swift
 //  S3Photos
 //
-//  Created by Leon Li on 2023/9/26.
+//  Created by Leon Li on 2023/10/24.
 //
 
 import UIKit
 
-class ObjectCollectionViewCell: UICollectionViewCell {
+class VideoObjectCollectionViewCell: UICollectionViewCell {
 
     var thumbnailView: UIImageView!
-    var nameLabel: UILabel!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,17 +21,10 @@ class ObjectCollectionViewCell: UICollectionViewCell {
         thumbnailView.clipsToBounds = true
         contentView.addSubview(thumbnailView)
 
-        nameLabel = UILabel()
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(nameLabel)
-
         thumbnailView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         thumbnailView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         thumbnailView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
         thumbnailView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-
-        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8).isActive = true
     }
 
     required init?(coder: NSCoder) {
@@ -46,7 +38,5 @@ class ObjectCollectionViewCell: UICollectionViewCell {
                 thumbnailView.image = thumbnail
             }
         }
-
-        nameLabel.text = object.name
     }
 }
