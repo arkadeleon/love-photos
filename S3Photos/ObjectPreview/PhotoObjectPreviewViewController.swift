@@ -16,6 +16,8 @@ class PhotoObjectPreviewViewController: UIViewController {
     var previewView: UIImageView!
     var thumbnailView: UIImageView!
 
+    private var previewTask: Task<UIImage?, Error>?
+
     init(manager: S3ObjectManager, object: S3Object) {
         self.manager = manager
         self.object = object
@@ -23,6 +25,10 @@ class PhotoObjectPreviewViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         title = object.name
+    }
+
+    deinit {
+        previewTask?.cancel()
     }
 
     required init?(coder: NSCoder) {
@@ -52,7 +58,8 @@ class PhotoObjectPreviewViewController: UIViewController {
                 thumbnailView.image = thumbnail
             }
 
-            if let preview = try await manager.previewForObject(object) {
+            previewTask = manager.previewTask(for: object)
+            if let preview = try await previewTask?.value {
                 thumbnailView.isHidden = true
 
                 previewView.image = preview

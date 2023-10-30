@@ -55,7 +55,7 @@ class S3ObjectManager {
                     }
                     continuation.finish()
                 default:
-                    if let thumbnail = try await thumbnailForObject(object) {
+                    if let thumbnail = try await thumbnailTask(for: object).value {
                         continuation.yield(thumbnail)
                     }
                     continuation.finish()
@@ -64,75 +64,108 @@ class S3ObjectManager {
         }
     }
 
-    func previewForObject(_ object: S3Object) async throws -> UIImage? {
-        guard object.type == .photo else {
-            return nil
-        }
+    func thumbnailTask(for object: S3Object) -> Task<UIImage?, Error> {
+        Task {
+            switch object.type {
+            case .photo:
+                try Task.checkCancellation()
 
-        if let data = cache.data(for: object) {
-            return UIImage(data: data)
-        }
+                if let thumbnail = cache.thumbnail(for: object) {
+                    return thumbnail
+                }
 
-        let data = try await service.getObject(key: object.key!)
+                try Task.checkCancellation()
 
-        cache.setData(data, forObject: object)
+                let url = try await service.signObject(key: object.key!)
 
-        return UIImage(data: data)
-    }
-}
+                try Task.checkCancellation()
 
-extension S3ObjectManager {
-    private func thumbnailForObject(_ object: S3Object) async throws -> UIImage? {
-        switch object.type {
-        case .photo:
-            if let thumbnail = cache.thumbnail(for: object) {
+                let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+                guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+                    return nil
+                }
+
+                try Task.checkCancellation()
+
+                let downsampleOptions: [CFString : Any] = [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceShouldCacheImmediately: true,
+                    kCGImageSourceCreateThumbnailWithTransform: true,
+                    kCGImageSourceThumbnailMaxPixelSize: 200
+                ]
+                let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions as CFDictionary)
+                let thumbnail = downsampledImage.map(UIImage.init)
+
+                try Task.checkCancellation()
+
+                if let thumbnail {
+                    cache.setThumbnail(thumbnail, forObject: object)
+                }
+
+                try Task.checkCancellation()
+
                 return thumbnail
-            }
+            case .video:
+                try Task.checkCancellation()
 
-            let url = try await service.signObject(key: object.key!)
-            let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
-            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+                if let thumbnail = cache.thumbnail(for: object) {
+                    return thumbnail
+                }
+
+                try Task.checkCancellation()
+
+                let url = try await service.signObject(key: object.key!)
+
+                try Task.checkCancellation()
+
+                let asset = AVAsset(url: url)
+                let assetImageGenerator = AVAssetImageGenerator(asset: asset)
+                assetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
+                assetImageGenerator.appliesPreferredTrackTransform = true
+                let thumbnail = await withCheckedContinuation { continuation in
+                    assetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
+                        continuation.resume(returning: image.flatMap(UIImage.init))
+                    }
+                }
+
+                try Task.checkCancellation()
+
+                if let thumbnail {
+                    cache.setThumbnail(thumbnail, forObject: object)
+                }
+
+                try Task.checkCancellation()
+
+                return thumbnail
+            default:
+                return nil
+            }
+        }
+    }
+
+    func previewTask(for object: S3Object) -> Task<UIImage?, Error> {
+        Task {
+            guard object.type == .photo else {
                 return nil
             }
 
-            let downsampleOptions: [CFString : Any] = [
-                kCGImageSourceCreateThumbnailFromImageAlways: true,
-                kCGImageSourceShouldCacheImmediately: true,
-                kCGImageSourceCreateThumbnailWithTransform: true,
-                kCGImageSourceThumbnailMaxPixelSize: 200
-            ]
-            let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions as CFDictionary)
-            let thumbnail = downsampledImage.map(UIImage.init)
+            try Task.checkCancellation()
 
-            if let thumbnail {
-                cache.setThumbnail(thumbnail, forObject: object)
+            if let data = cache.data(for: object) {
+                return UIImage(data: data)
             }
 
-            return thumbnail
-        case .video:
-            if let thumbnail = cache.thumbnail(for: object) {
-                return thumbnail
-            }
+            try Task.checkCancellation()
 
-            let url = try await service.signObject(key: object.key!)
-            let asset = AVAsset(url: url)
-            let assetImageGenerator = AVAssetImageGenerator(asset: asset)
-            assetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
-            assetImageGenerator.appliesPreferredTrackTransform = true
+            let data = try await service.getObject(key: object.key!)
 
-            let thumbnail = await withCheckedContinuation { continuation in
-                assetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
-                    continuation.resume(returning: image.flatMap(UIImage.init))
-                }
-            }
+            try Task.checkCancellation()
 
-            if let thumbnail {
-                cache.setThumbnail(thumbnail, forObject: object)
-            }
+            cache.setData(data, forObject: object)
 
-            return thumbnail
-        default:
-            return nil
+            try Task.checkCancellation()
+
+            return UIImage(data: data)
         }
     }
 }

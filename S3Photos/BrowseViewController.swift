@@ -45,7 +45,7 @@ class BrowseViewController: UIViewController {
         fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "isGroup", ascending: true),
-            NSSortDescriptor(key: "key", ascending: true),
+            NSSortDescriptor(key: "key", ascending: true)
         ]
 
         let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)

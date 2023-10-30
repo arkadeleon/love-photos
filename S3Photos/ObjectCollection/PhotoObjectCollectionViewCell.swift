@@ -11,6 +11,8 @@ class PhotoObjectCollectionViewCell: UICollectionViewCell {
 
     var thumbnailView: UIImageView!
 
+    private var thumbnailTask: Task<UIImage?, Error>?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -31,12 +33,20 @@ class PhotoObjectCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        thumbnailTask?.cancel()
+        thumbnailTask = nil
+    }
+
     func configure(withManager manager: S3ObjectManager, object: S3Object) {
         thumbnailView.image = nil
+
+        thumbnailTask = manager.thumbnailTask(for: object)
+
         Task {
-            for try await thumbnail in manager.thumbnailStreamForObject(object) {
-                thumbnailView.image = thumbnail
-            }
+            thumbnailView.image = try await thumbnailTask?.value
         }
     }
 }

@@ -38,8 +38,10 @@ class DownloadedViewController: UIViewController {
         let manager = S3ObjectManager(account: account)
 
         let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
-        fetchRequest.predicate = NSPredicate(format: "not (key like %@)", "*/")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "key", ascending: true)]
+        fetchRequest.predicate = NSPredicate(format: "isGroup == NO")
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "key", ascending: true)
+        ]
 
         let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
 

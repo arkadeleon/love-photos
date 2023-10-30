@@ -48,6 +48,9 @@ class PersistenceController {
         try context.performAndWait {
             let fetchRequest = S3Object.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(key: "key", ascending: true)
+            ]
             return try context.fetch(fetchRequest)
         }
     }

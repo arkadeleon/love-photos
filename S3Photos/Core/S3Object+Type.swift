@@ -27,7 +27,8 @@ extension S3Object {
         let ext = (key as NSString?)?.pathExtension.lowercased()
         switch ext {
         case "heic", 
-             "jpg":
+             "jpg",
+             "png":
             return .photo
         case "avi",
              "mov",
