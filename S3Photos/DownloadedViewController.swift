@@ -29,6 +29,8 @@ class DownloadedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .systemBackground
+
         if let account = S3AccountManager.shared.activeAccount {
             addObjectCollectionViewController(withAccount: account)
         }
@@ -38,7 +40,7 @@ class DownloadedViewController: UIViewController {
         let manager = S3ObjectManager(account: account)
 
         let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
-        fetchRequest.predicate = NSPredicate(format: "isGroup == NO")
+        fetchRequest.predicate = NSPredicate(format: "rawType == %@", S3ObjectType.file.rawValue)
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(key: "key", ascending: true)
         ]

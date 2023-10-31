@@ -28,6 +28,8 @@ class AccountsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .systemBackground
+
         let addAccountAction = UIAction(image: UIImage(systemName: "plus.circle")) { _ in
             self.presentAddAccountAlertController()
         }

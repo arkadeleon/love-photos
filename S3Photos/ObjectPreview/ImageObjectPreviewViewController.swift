@@ -1,5 +1,5 @@
 //
-//  PhotoObjectPreviewViewController.swift
+//  ImageObjectPreviewViewController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/16.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotoObjectPreviewViewController: UIViewController {
+class ImageObjectPreviewViewController: UIViewController {
 
     let manager: S3ObjectManager
     let object: S3Object
@@ -101,7 +101,7 @@ class PhotoObjectPreviewViewController: UIViewController {
     }
 }
 
-extension PhotoObjectPreviewViewController: UIScrollViewDelegate {
+extension ImageObjectPreviewViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         previewView
     }

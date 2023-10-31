@@ -1,5 +1,5 @@
 //
-//  PhotoObjectCollectionViewCell.swift
+//  ImageObjectCollectionViewCell.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/9/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotoObjectCollectionViewCell: UICollectionViewCell {
+class ImageObjectCollectionViewCell: UICollectionViewCell {
 
     var thumbnailView: UIImageView!
 

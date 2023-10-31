@@ -33,6 +33,8 @@ class BrowseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.backgroundColor = .systemBackground
+
         if let account = S3AccountManager.shared.activeAccount {
             addObjectCollectionViewController(withAccount: account)
         }
@@ -44,7 +46,7 @@ class BrowseViewController: UIViewController {
         let fetchRequest = S3Object.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "isGroup", ascending: true),
+            NSSortDescriptor(key: "rawType", ascending: true),
             NSSortDescriptor(key: "key", ascending: true)
         ]
 

@@ -1,5 +1,5 @@
 //
-//  OtherObjectCollectionViewCell.swift
+//  UnknownObjectCollectionViewCell.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/24.
@@ -7,15 +7,18 @@
 
 import UIKit
 
-class OtherObjectCollectionViewCell: UICollectionViewCell {
+class UnknownObjectCollectionViewCell: UICollectionViewCell {
 
     var nameLabel: UILabel!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        contentView.backgroundColor = .secondarySystemBackground
+
         nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 2
         contentView.addSubview(nameLabel)
 

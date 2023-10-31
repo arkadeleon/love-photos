@@ -77,15 +77,16 @@ class ObjectPreviewViewController: UIViewController {
     }
 
     private func previewViewController(for object: S3Object) -> UIViewController {
-        switch object.type {
-        case .photo:
-            let previewViewController = PhotoObjectPreviewViewController(manager: manager, object: object)
+        switch object.fileMediaType {
+        case .image:
+            let previewViewController = ImageObjectPreviewViewController(manager: manager, object: object)
             return previewViewController
         case .video:
             let previewViewController = VideoObjectPreviewViewController(manager: manager, object: object)
             return previewViewController
         default:
-            fatalError()
+            let previewViewController = UIViewController()
+            return previewViewController
         }
     }
 }
@@ -125,7 +126,7 @@ extension ObjectPreviewViewController: UIPageViewControllerDataSource {
 extension ObjectPreviewViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if completed {
-            if let previewViewController = pageViewController.viewControllers?.first as? PhotoObjectPreviewViewController {
+            if let previewViewController = pageViewController.viewControllers?.first as? ImageObjectPreviewViewController {
                 title = previewViewController.title
                 object = previewViewController.object
             } else if let previewViewController = pageViewController.viewControllers?.first as? VideoObjectPreviewViewController {

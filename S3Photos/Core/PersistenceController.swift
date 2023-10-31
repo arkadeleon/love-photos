@@ -69,13 +69,7 @@ class PersistenceController {
                     continue
                 }
 
-                let object = S3Object(context: context)
-                object.prefix = prefix
-                object.eTag = obj.eTag
-                object.key = obj.key
-                object.lastModified = obj.lastModified
-                object.size = obj.size ?? 0
-                object.isGroup = object.type == .group
+                let object = S3Object(context: context, object: obj, prefix: prefix)
             }
 
             try context.save()

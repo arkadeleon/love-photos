@@ -1,5 +1,5 @@
 //
-//  GroupObjectCollectionViewCell.swift
+//  FolderObjectCollectionViewCell.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/20.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class GroupObjectCollectionViewCell: UICollectionViewCell {
-    
+class FolderObjectCollectionViewCell: UICollectionViewCell {
+
     var thumbnailViews: [UIImageView]!
     var nameLabel: UILabel!
 

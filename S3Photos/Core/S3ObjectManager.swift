@@ -42,7 +42,7 @@ class S3ObjectManager {
         AsyncThrowingStream { continuation in
             Task {
                 switch object.type {
-                case .group:
+                case .folder:
                     var objects = try await PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
                     if objects.isEmpty {
                         try await listObjects(prefix: object.key!)
@@ -54,10 +54,12 @@ class S3ObjectManager {
                         }
                     }
                     continuation.finish()
-                default:
+                case .file:
                     if let thumbnail = try await thumbnailTask(for: object).value {
                         continuation.yield(thumbnail)
                     }
+                    continuation.finish()
+                default:
                     continuation.finish()
                 }
             }
@@ -66,8 +68,8 @@ class S3ObjectManager {
 
     func thumbnailTask(for object: S3Object) -> Task<UIImage?, Error> {
         Task {
-            switch object.type {
-            case .photo:
+            switch object.fileMediaType {
+            case .image:
                 try Task.checkCancellation()
 
                 if let thumbnail = cache.thumbnail(for: object) {
@@ -145,7 +147,7 @@ class S3ObjectManager {
 
     func previewTask(for object: S3Object) -> Task<UIImage?, Error> {
         Task {
-            guard object.type == .photo else {
+            guard object.fileMediaType == .image else {
                 return nil
             }
 
