@@ -1,5 +1,5 @@
 //
-//  VideoObjectPreviewViewController.swift
+//  VideoAssetPreviewViewController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/17.
@@ -9,20 +9,20 @@ import AVFoundation
 import Combine
 import UIKit
 
-class VideoObjectPreviewViewController: UIViewController {
+class VideoAssetPreviewViewController: UIViewController {
 
-    let manager: S3ObjectManager
-    let object: S3Object
+    let manager: AssetManager
+    let asset: Asset
 
     private var subscriptions = Set<AnyCancellable>()
 
-    init(manager: S3ObjectManager, object: S3Object) {
+    init(manager: AssetManager, asset: Asset) {
         self.manager = manager
-        self.object = object
+        self.asset = asset
 
         super.init(nibName: nil, bundle: nil)
 
-        title = object.name
+        title = asset.name
     }
 
     required init?(coder: NSCoder) {
@@ -54,11 +54,11 @@ class VideoObjectPreviewViewController: UIViewController {
         progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
         Task {
-            for try await thumbnail in manager.thumbnailStreamForObject(object) {
+            for try await thumbnail in manager.thumbnailStreamForAsset(asset) {
                 thumbnailView.image = thumbnail
             }
 
-            guard let url = try await manager.urlForObject(object) else {
+            guard let url = try await manager.urlForAsset(asset) else {
                 return
             }
 

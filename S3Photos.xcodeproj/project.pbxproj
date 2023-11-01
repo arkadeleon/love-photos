@@ -7,46 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		352633582AC2ABDD00CA7060 /* ObjectCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */; };
-		3526335A2AC2AE3300CA7060 /* ImageObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* ImageObjectCollectionViewCell.swift */; };
-		3532DBD02ADD11B0000898CE /* S3ObjectCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */; };
-		3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */; };
-		3532DBD62ADD2C9D000898CE /* ImageObjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD52ADD2C9D000898CE /* ImageObjectPreviewViewController.swift */; };
-		3532DBD82ADD3A07000898CE /* ObjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD72ADD3A07000898CE /* ObjectPreviewViewController.swift */; };
-		3532DBDA2ADE28DC000898CE /* VideoObjectPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD92ADE28DC000898CE /* VideoObjectPreviewViewController.swift */; };
+		352633582AC2ABDD00CA7060 /* AssetCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633572AC2ABDD00CA7060 /* AssetCollectionViewController.swift */; };
+		3526335A2AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift */; };
+		3532DBD02ADD11B0000898CE /* AssetCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBCF2ADD11B0000898CE /* AssetCache.swift */; };
+		3532DBD42ADD2AFC000898CE /* Asset+Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD32ADD2AFC000898CE /* Asset+Type.swift */; };
+		3532DBD62ADD2C9D000898CE /* ImageAssetPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD52ADD2C9D000898CE /* ImageAssetPreviewViewController.swift */; };
+		3532DBD82ADD3A07000898CE /* AssetPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD72ADD3A07000898CE /* AssetPreviewViewController.swift */; };
+		3532DBDA2ADE28DC000898CE /* VideoAssetPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBD92ADE28DC000898CE /* VideoAssetPreviewViewController.swift */; };
 		3532DBDC2ADE6524000898CE /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBDB2ADE6524000898CE /* BrowseViewController.swift */; };
 		3532DBDE2ADE652E000898CE /* DownloadedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBDD2ADE652E000898CE /* DownloadedViewController.swift */; };
-		3532DBE02ADFC0AE000898CE /* S3AccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */; };
+		3532DBE02ADFC0AE000898CE /* AccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBDF2ADFC0AE000898CE /* AccountManager.swift */; };
 		3532DBE22ADFC0FE000898CE /* AccountCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */; };
 		3532DBE62ADFD30C000898CE /* AccountsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBE52ADFD30C000898CE /* AccountsViewController.swift */; };
+		356BF6432AF1F585005B67F7 /* Asset+S3Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6422AF1F585005B67F7 /* Asset+S3Object.swift */; };
+		356BF6452AF1F76B005B67F7 /* AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6442AF1F76B005B67F7 /* AssetService.swift */; };
 		3598A7212AC188AA00806CC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7202AC188AA00806CC3 /* AppDelegate.swift */; };
 		3598A7232AC188AA00806CC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7222AC188AA00806CC3 /* SceneDelegate.swift */; };
-		3598A72B2AC188AA00806CC3 /* S3Photos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7292AC188AA00806CC3 /* S3Photos.xcdatamodeld */; };
+		3598A72B2AC188AA00806CC3 /* CloudStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7292AC188AA00806CC3 /* CloudStorage.xcdatamodeld */; };
 		3598A72D2AC188AB00806CC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3598A72C2AC188AB00806CC3 /* Assets.xcassets */; };
 		3598A7302AC188AB00806CC3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3598A72E2AC188AB00806CC3 /* LaunchScreen.storyboard */; };
 		3598A7572AC18B7B00806CC3 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7562AC18B7B00806CC3 /* PersistenceController.swift */; };
 		3598A75E2AC2873800806CC3 /* SotoS3 in Frameworks */ = {isa = PBXBuildFile; productRef = 3598A75D2AC2873800806CC3 /* SotoS3 */; };
-		3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */; };
-		35B2BBD62AE131FC0041AE5C /* S3ObjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */; };
-		35B2BBDA2AE25B100041AE5C /* FolderObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */; };
-		35B2BBDC2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */; };
-		35B2BBE02AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */; };
-		35B2BBE22AE7AE4E0041AE5C /* UnknownObjectCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBE12AE7AE4E0041AE5C /* UnknownObjectCollectionViewCell.swift */; };
+		3598A7602AC2876E00806CC3 /* AssetManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A75F2AC2876E00806CC3 /* AssetManager.swift */; };
+		35B2BBD62AE131FC0041AE5C /* S3AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD52AE131FC0041AE5C /* S3AssetService.swift */; };
+		35B2BBDA2AE25B100041AE5C /* FolderAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBD92AE25B100041AE5C /* FolderAssetCollectionViewCell.swift */; };
+		35B2BBDC2AE6174E0041AE5C /* AssetPreviewNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDB2AE6174E0041AE5C /* AssetPreviewNavigationController.swift */; };
+		35B2BBE02AE7AE440041AE5C /* VideoAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBDF2AE7AE440041AE5C /* VideoAssetCollectionViewCell.swift */; };
+		35B2BBE22AE7AE4E0041AE5C /* UnknownAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B2BBE12AE7AE4E0041AE5C /* UnknownAssetCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectCollectionViewController.swift; sourceTree = "<group>"; };
-		352633592AC2AE3300CA7060 /* ImageObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageObjectCollectionViewCell.swift; sourceTree = "<group>"; };
-		3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectCache.swift; sourceTree = "<group>"; };
-		3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "S3Object+Type.swift"; sourceTree = "<group>"; };
-		3532DBD52ADD2C9D000898CE /* ImageObjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageObjectPreviewViewController.swift; sourceTree = "<group>"; };
-		3532DBD72ADD3A07000898CE /* ObjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPreviewViewController.swift; sourceTree = "<group>"; };
-		3532DBD92ADE28DC000898CE /* VideoObjectPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoObjectPreviewViewController.swift; sourceTree = "<group>"; };
+		352633572AC2ABDD00CA7060 /* AssetCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectionViewController.swift; sourceTree = "<group>"; };
+		352633592AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetCollectionViewCell.swift; sourceTree = "<group>"; };
+		3532DBCF2ADD11B0000898CE /* AssetCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCache.swift; sourceTree = "<group>"; };
+		3532DBD32ADD2AFC000898CE /* Asset+Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+Type.swift"; sourceTree = "<group>"; };
+		3532DBD52ADD2C9D000898CE /* ImageAssetPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetPreviewViewController.swift; sourceTree = "<group>"; };
+		3532DBD72ADD3A07000898CE /* AssetPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPreviewViewController.swift; sourceTree = "<group>"; };
+		3532DBD92ADE28DC000898CE /* VideoAssetPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetPreviewViewController.swift; sourceTree = "<group>"; };
 		3532DBDB2ADE6524000898CE /* BrowseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseViewController.swift; sourceTree = "<group>"; };
 		3532DBDD2ADE652E000898CE /* DownloadedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedViewController.swift; sourceTree = "<group>"; };
-		3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3AccountManager.swift; sourceTree = "<group>"; };
+		3532DBDF2ADFC0AE000898CE /* AccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManager.swift; sourceTree = "<group>"; };
 		3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCollectionViewController.swift; sourceTree = "<group>"; };
 		3532DBE52ADFD30C000898CE /* AccountsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsViewController.swift; sourceTree = "<group>"; };
+		356BF6422AF1F585005B67F7 /* Asset+S3Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+S3Object.swift"; sourceTree = "<group>"; };
+		356BF6442AF1F76B005B67F7 /* AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetService.swift; sourceTree = "<group>"; };
 		3598A71D2AC188AA00806CC3 /* S3Photos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = S3Photos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3598A7202AC188AA00806CC3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3598A7222AC188AA00806CC3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,12 +59,12 @@
 		3598A72F2AC188AB00806CC3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3598A7312AC188AB00806CC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3598A7562AC18B7B00806CC3 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
-		3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectManager.swift; sourceTree = "<group>"; };
-		35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3ObjectService.swift; sourceTree = "<group>"; };
-		35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderObjectCollectionViewCell.swift; sourceTree = "<group>"; };
-		35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPreviewNavigationController.swift; sourceTree = "<group>"; };
-		35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoObjectCollectionViewCell.swift; sourceTree = "<group>"; };
-		35B2BBE12AE7AE4E0041AE5C /* UnknownObjectCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownObjectCollectionViewCell.swift; sourceTree = "<group>"; };
+		3598A75F2AC2876E00806CC3 /* AssetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetManager.swift; sourceTree = "<group>"; };
+		35B2BBD52AE131FC0041AE5C /* S3AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3AssetService.swift; sourceTree = "<group>"; };
+		35B2BBD92AE25B100041AE5C /* FolderAssetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderAssetCollectionViewCell.swift; sourceTree = "<group>"; };
+		35B2BBDB2AE6174E0041AE5C /* AssetPreviewNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPreviewNavigationController.swift; sourceTree = "<group>"; };
+		35B2BBDF2AE7AE440041AE5C /* VideoAssetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoAssetCollectionViewCell.swift; sourceTree = "<group>"; };
+		35B2BBE12AE7AE4E0041AE5C /* UnknownAssetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownAssetCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,15 +99,12 @@
 		3598A71F2AC188AA00806CC3 /* S3Photos */ = {
 			isa = PBXGroup;
 			children = (
+				35BB3CF02AF103B6008F9DE3 /* CloudStorage */,
 				3598A7202AC188AA00806CC3 /* AppDelegate.swift */,
 				3598A7222AC188AA00806CC3 /* SceneDelegate.swift */,
 				3532DBDB2ADE6524000898CE /* BrowseViewController.swift */,
 				3532DBDD2ADE652E000898CE /* DownloadedViewController.swift */,
 				3532DBE52ADFD30C000898CE /* AccountsViewController.swift */,
-				35B2BBE62AE7C03F0041AE5C /* AccountCollection */,
-				35B2BBE32AE7AE970041AE5C /* ObjectCollection */,
-				35B2BBE52AE7AED90041AE5C /* ObjectPreview */,
-				35B2BBE72AE7C0680041AE5C /* Core */,
 				3598A72C2AC188AB00806CC3 /* Assets.xcassets */,
 				3598A72E2AC188AB00806CC3 /* LaunchScreen.storyboard */,
 				3598A7312AC188AB00806CC3 /* Info.plist */,
@@ -118,49 +119,54 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		35B2BBE32AE7AE970041AE5C /* ObjectCollection */ = {
+		35BB3CF02AF103B6008F9DE3 /* CloudStorage */ = {
 			isa = PBXGroup;
 			children = (
-				352633572AC2ABDD00CA7060 /* ObjectCollectionViewController.swift */,
-				35B2BBD92AE25B100041AE5C /* FolderObjectCollectionViewCell.swift */,
-				352633592AC2AE3300CA7060 /* ImageObjectCollectionViewCell.swift */,
-				35B2BBDF2AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift */,
-				35B2BBE12AE7AE4E0041AE5C /* UnknownObjectCollectionViewCell.swift */,
+				35BB3CF12AF103E7008F9DE3 /* CloudStorageCore */,
+				35BB3CF32AF103FF008F9DE3 /* CloudStorageS3 */,
+				35BB3CF22AF103F1008F9DE3 /* CloudStorageUI */,
 			);
-			path = ObjectCollection;
+			path = CloudStorage;
 			sourceTree = "<group>";
 		};
-		35B2BBE52AE7AED90041AE5C /* ObjectPreview */ = {
+		35BB3CF12AF103E7008F9DE3 /* CloudStorageCore */ = {
 			isa = PBXGroup;
 			children = (
-				35B2BBDB2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift */,
-				3532DBD72ADD3A07000898CE /* ObjectPreviewViewController.swift */,
-				3532DBD52ADD2C9D000898CE /* ImageObjectPreviewViewController.swift */,
-				3532DBD92ADE28DC000898CE /* VideoObjectPreviewViewController.swift */,
+				3532DBDF2ADFC0AE000898CE /* AccountManager.swift */,
+				3598A75F2AC2876E00806CC3 /* AssetManager.swift */,
+				356BF6442AF1F76B005B67F7 /* AssetService.swift */,
+				3532DBCF2ADD11B0000898CE /* AssetCache.swift */,
+				3598A7562AC18B7B00806CC3 /* PersistenceController.swift */,
+				3532DBD32ADD2AFC000898CE /* Asset+Type.swift */,
+				3598A7292AC188AA00806CC3 /* CloudStorage.xcdatamodeld */,
 			);
-			path = ObjectPreview;
+			path = CloudStorageCore;
 			sourceTree = "<group>";
 		};
-		35B2BBE62AE7C03F0041AE5C /* AccountCollection */ = {
+		35BB3CF22AF103F1008F9DE3 /* CloudStorageUI */ = {
 			isa = PBXGroup;
 			children = (
 				3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */,
+				352633572AC2ABDD00CA7060 /* AssetCollectionViewController.swift */,
+				35B2BBD92AE25B100041AE5C /* FolderAssetCollectionViewCell.swift */,
+				352633592AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift */,
+				35B2BBDF2AE7AE440041AE5C /* VideoAssetCollectionViewCell.swift */,
+				35B2BBE12AE7AE4E0041AE5C /* UnknownAssetCollectionViewCell.swift */,
+				35B2BBDB2AE6174E0041AE5C /* AssetPreviewNavigationController.swift */,
+				3532DBD72ADD3A07000898CE /* AssetPreviewViewController.swift */,
+				3532DBD52ADD2C9D000898CE /* ImageAssetPreviewViewController.swift */,
+				3532DBD92ADE28DC000898CE /* VideoAssetPreviewViewController.swift */,
 			);
-			path = AccountCollection;
+			path = CloudStorageUI;
 			sourceTree = "<group>";
 		};
-		35B2BBE72AE7C0680041AE5C /* Core */ = {
+		35BB3CF32AF103FF008F9DE3 /* CloudStorageS3 */ = {
 			isa = PBXGroup;
 			children = (
-				3532DBDF2ADFC0AE000898CE /* S3AccountManager.swift */,
-				3598A75F2AC2876E00806CC3 /* S3ObjectManager.swift */,
-				35B2BBD52AE131FC0041AE5C /* S3ObjectService.swift */,
-				3532DBCF2ADD11B0000898CE /* S3ObjectCache.swift */,
-				3598A7562AC18B7B00806CC3 /* PersistenceController.swift */,
-				3532DBD32ADD2AFC000898CE /* S3Object+Type.swift */,
-				3598A7292AC188AA00806CC3 /* S3Photos.xcdatamodeld */,
+				35B2BBD52AE131FC0041AE5C /* S3AssetService.swift */,
+				356BF6422AF1F585005B67F7 /* Asset+S3Object.swift */,
 			);
-			path = Core;
+			path = CloudStorageS3;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -239,28 +245,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35B2BBD62AE131FC0041AE5C /* S3ObjectService.swift in Sources */,
-				3532DBD82ADD3A07000898CE /* ObjectPreviewViewController.swift in Sources */,
-				3598A72B2AC188AA00806CC3 /* S3Photos.xcdatamodeld in Sources */,
+				35B2BBD62AE131FC0041AE5C /* S3AssetService.swift in Sources */,
+				3532DBD82ADD3A07000898CE /* AssetPreviewViewController.swift in Sources */,
+				3598A72B2AC188AA00806CC3 /* CloudStorage.xcdatamodeld in Sources */,
 				3598A7212AC188AA00806CC3 /* AppDelegate.swift in Sources */,
-				35B2BBE22AE7AE4E0041AE5C /* UnknownObjectCollectionViewCell.swift in Sources */,
-				35B2BBE02AE7AE440041AE5C /* VideoObjectCollectionViewCell.swift in Sources */,
+				35B2BBE22AE7AE4E0041AE5C /* UnknownAssetCollectionViewCell.swift in Sources */,
+				35B2BBE02AE7AE440041AE5C /* VideoAssetCollectionViewCell.swift in Sources */,
+				356BF6452AF1F76B005B67F7 /* AssetService.swift in Sources */,
 				3532DBE22ADFC0FE000898CE /* AccountCollectionViewController.swift in Sources */,
 				3532DBE62ADFD30C000898CE /* AccountsViewController.swift in Sources */,
 				3598A7232AC188AA00806CC3 /* SceneDelegate.swift in Sources */,
-				3532DBD02ADD11B0000898CE /* S3ObjectCache.swift in Sources */,
+				3532DBD02ADD11B0000898CE /* AssetCache.swift in Sources */,
 				3598A7572AC18B7B00806CC3 /* PersistenceController.swift in Sources */,
 				3532DBDC2ADE6524000898CE /* BrowseViewController.swift in Sources */,
 				3532DBDE2ADE652E000898CE /* DownloadedViewController.swift in Sources */,
-				3598A7602AC2876E00806CC3 /* S3ObjectManager.swift in Sources */,
-				35B2BBDA2AE25B100041AE5C /* FolderObjectCollectionViewCell.swift in Sources */,
-				3526335A2AC2AE3300CA7060 /* ImageObjectCollectionViewCell.swift in Sources */,
-				3532DBD62ADD2C9D000898CE /* ImageObjectPreviewViewController.swift in Sources */,
-				35B2BBDC2AE6174E0041AE5C /* ObjectPreviewNavigationController.swift in Sources */,
-				3532DBD42ADD2AFC000898CE /* S3Object+Type.swift in Sources */,
-				3532DBDA2ADE28DC000898CE /* VideoObjectPreviewViewController.swift in Sources */,
-				352633582AC2ABDD00CA7060 /* ObjectCollectionViewController.swift in Sources */,
-				3532DBE02ADFC0AE000898CE /* S3AccountManager.swift in Sources */,
+				3598A7602AC2876E00806CC3 /* AssetManager.swift in Sources */,
+				35B2BBDA2AE25B100041AE5C /* FolderAssetCollectionViewCell.swift in Sources */,
+				3526335A2AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift in Sources */,
+				3532DBD62ADD2C9D000898CE /* ImageAssetPreviewViewController.swift in Sources */,
+				356BF6432AF1F585005B67F7 /* Asset+S3Object.swift in Sources */,
+				35B2BBDC2AE6174E0041AE5C /* AssetPreviewNavigationController.swift in Sources */,
+				3532DBD42ADD2AFC000898CE /* Asset+Type.swift in Sources */,
+				3532DBDA2ADE28DC000898CE /* VideoAssetPreviewViewController.swift in Sources */,
+				352633582AC2ABDD00CA7060 /* AssetCollectionViewController.swift in Sources */,
+				3532DBE02ADFC0AE000898CE /* AccountManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,13 +504,13 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		3598A7292AC188AA00806CC3 /* S3Photos.xcdatamodeld */ = {
+		3598A7292AC188AA00806CC3 /* CloudStorage.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				3598A72A2AC188AA00806CC3 /* S3Photos.xcdatamodel */,
 			);
 			currentVersion = 3598A72A2AC188AA00806CC3 /* S3Photos.xcdatamodel */;
-			path = S3Photos.xcdatamodeld;
+			path = CloudStorage.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

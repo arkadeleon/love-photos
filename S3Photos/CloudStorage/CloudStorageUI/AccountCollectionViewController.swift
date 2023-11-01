@@ -12,14 +12,14 @@ class AccountCollectionViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var diffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
-    private var fetchedResultsController: NSFetchedResultsController<S3Account>!
+    private var fetchedResultsController: NSFetchedResultsController<Account>!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         addAccountCollectionView()
 
-        let fetchRequest = NSFetchRequest<S3Account>(entityName: "S3Account")
+        let fetchRequest = Account.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "objectID", ascending: true)]
 
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.context, sectionNameKeyPath: "objectID", cacheName: nil)
@@ -55,7 +55,7 @@ class AccountCollectionViewController: UIViewController {
 
             let clearCache = UIAction(title: "Clear Cache", image: UIImage(systemName: "trash"), attributes: [.destructive]) { _ in
                 Task {
-                    try await PersistenceController.shared.deleteAllObjects(for: account)
+                    try await PersistenceController.shared.deleteAllAssets(for: account)
                 }
             }
             let menu = UIMenu(options: .displayInline, children: [clearCache])

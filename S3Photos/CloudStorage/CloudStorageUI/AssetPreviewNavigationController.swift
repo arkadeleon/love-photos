@@ -1,5 +1,5 @@
 //
-//  ObjectPreviewNavigationController.swift
+//  AssetPreviewNavigationController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/23.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ObjectPreviewNavigationController: UINavigationController {
+class AssetPreviewNavigationController: UINavigationController {
 
-    init(manager: S3ObjectManager, object: S3Object, objects: [S3Object]) {
-        let previewViewController = ObjectPreviewViewController(manager: manager, object: object, objects: objects)
+    init(manager: AssetManager, asset: Asset, assets: [Asset]) {
+        let previewViewController = AssetPreviewViewController(manager: manager, asset: asset, assets: assets)
         super.init(rootViewController: previewViewController)
 
         modalTransitionStyle = .coverVertical

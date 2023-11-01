@@ -1,13 +1,13 @@
 //
-//  ImageObjectCollectionViewCell.swift
+//  VideoAssetCollectionViewCell.swift
 //  S3Photos
 //
-//  Created by Leon Li on 2023/9/26.
+//  Created by Leon Li on 2023/10/24.
 //
 
 import UIKit
 
-class ImageObjectCollectionViewCell: UICollectionViewCell {
+class VideoAssetCollectionViewCell: UICollectionViewCell {
 
     var thumbnailView: UIImageView!
 
@@ -40,10 +40,10 @@ class ImageObjectCollectionViewCell: UICollectionViewCell {
         thumbnailTask = nil
     }
 
-    func configure(withManager manager: S3ObjectManager, object: S3Object) {
+    func configure(withManager manager: AssetManager, asset: Asset) {
         thumbnailView.image = nil
 
-        thumbnailTask = manager.thumbnailTask(for: object)
+        thumbnailTask = manager.thumbnailTask(for: asset)
 
         Task {
             thumbnailView.image = try await thumbnailTask?.value

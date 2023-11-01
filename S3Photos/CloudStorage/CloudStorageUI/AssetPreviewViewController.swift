@@ -1,5 +1,5 @@
 //
-//  ObjectPreviewViewController.swift
+//  AssetPreviewViewController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/16.
@@ -7,18 +7,18 @@
 
 import UIKit
 
-class ObjectPreviewViewController: UIViewController {
+class AssetPreviewViewController: UIViewController {
 
-    let manager: S3ObjectManager
-    private(set) var object: S3Object
-    let objects: [S3Object]
+    let manager: AssetManager
+    private(set) var asset: Asset
+    let assets: [Asset]
 
     var pageViewController: UIPageViewController!
 
-    init(manager: S3ObjectManager, object: S3Object, objects: [S3Object]) {
+    init(manager: AssetManager, asset: Asset, assets: [Asset]) {
         self.manager = manager
-        self.object = object
-        self.objects = objects
+        self.asset = asset
+        self.assets = assets
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -70,19 +70,19 @@ class ObjectPreviewViewController: UIViewController {
         pageViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        let previewViewController = previewViewController(for: object)
+        let previewViewController = previewViewController(for: asset)
         pageViewController.setViewControllers([previewViewController], direction: .forward, animated: false)
 
         title = previewViewController.title
     }
 
-    private func previewViewController(for object: S3Object) -> UIViewController {
-        switch object.fileMediaType {
+    private func previewViewController(for asset: Asset) -> UIViewController {
+        switch asset.mediaType {
         case .image:
-            let previewViewController = ImageObjectPreviewViewController(manager: manager, object: object)
+            let previewViewController = ImageAssetPreviewViewController(manager: manager, asset: asset)
             return previewViewController
         case .video:
-            let previewViewController = VideoObjectPreviewViewController(manager: manager, object: object)
+            let previewViewController = VideoAssetPreviewViewController(manager: manager, asset: asset)
             return previewViewController
         default:
             let previewViewController = UIViewController()
@@ -91,9 +91,9 @@ class ObjectPreviewViewController: UIViewController {
     }
 }
 
-extension ObjectPreviewViewController: UIPageViewControllerDataSource {
+extension AssetPreviewViewController: UIPageViewControllerDataSource {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let index = objects.firstIndex(of: object) else {
+        guard let index = assets.firstIndex(of: asset) else {
             return nil
         }
 
@@ -102,36 +102,36 @@ extension ObjectPreviewViewController: UIPageViewControllerDataSource {
             return nil
         }
 
-        let previousObject = objects[previousIndex]
-        let previewViewController = previewViewController(for: previousObject)
+        let previousAsset = assets[previousIndex]
+        let previewViewController = previewViewController(for: previousAsset)
         return previewViewController
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let index = objects.firstIndex(of: object) else {
+        guard let index = assets.firstIndex(of: asset) else {
             return nil
         }
 
         let nextIndex = index + 1
-        guard nextIndex < objects.count else {
+        guard nextIndex < assets.count else {
             return nil
         }
 
-        let nextObject = objects[nextIndex]
-        let previewViewController = previewViewController(for: nextObject)
+        let nextAsset = assets[nextIndex]
+        let previewViewController = previewViewController(for: nextAsset)
         return previewViewController
     }
 }
 
-extension ObjectPreviewViewController: UIPageViewControllerDelegate {
+extension AssetPreviewViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if completed {
-            if let previewViewController = pageViewController.viewControllers?.first as? ImageObjectPreviewViewController {
+            if let previewViewController = pageViewController.viewControllers?.first as? ImageAssetPreviewViewController {
                 title = previewViewController.title
-                object = previewViewController.object
-            } else if let previewViewController = pageViewController.viewControllers?.first as? VideoObjectPreviewViewController {
+                asset = previewViewController.asset
+            } else if let previewViewController = pageViewController.viewControllers?.first as? VideoAssetPreviewViewController {
                 title = previewViewController.title
-                object = previewViewController.object
+                asset = previewViewController.asset
             }
         }
     }

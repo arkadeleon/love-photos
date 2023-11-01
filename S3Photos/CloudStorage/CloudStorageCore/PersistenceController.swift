@@ -22,7 +22,7 @@ class PersistenceController {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
-        container = NSPersistentContainer(name: "S3Photos")
+        container = NSPersistentContainer(name: "CloudStorage")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -44,41 +44,41 @@ class PersistenceController {
         context.automaticallyMergesChangesFromParent = true
     }
 
-    func fetchObjects(for account: S3Account, prefix: String) async throws -> [S3Object] {
+    func fetchAssets(for account: Account, parentIdentifier: String) async throws -> [Asset] {
         try context.performAndWait {
-            let fetchRequest = S3Object.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", prefix, prefix)
+            let fetchRequest = Asset.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "parentIdentifier == %@ && identifier != %@", parentIdentifier, parentIdentifier)
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(key: "key", ascending: true)
+                NSSortDescriptor(key: "name", ascending: true)
             ]
             return try context.fetch(fetchRequest)
         }
     }
 
-    func insertObjects(_ objs: [S3.Object], prefix: String) async throws {
+    func insertAssets(_ objects: [S3.Object], parentIdentifier: String) async throws {
         try context.performAndWait {
-            for obj in objs {
-                guard let key = obj.key else {
+            for object in objects {
+                guard let key = object.key else {
                     continue
                 }
 
-                let fetchRequest = S3Object.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "key == %@", key)
+                let fetchRequest = Asset.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "identifier == %@", key)
                 let result = try context.fetch(fetchRequest)
                 guard result.isEmpty else {
                     continue
                 }
 
-                let object = S3Object(context: context, object: obj, prefix: prefix)
+                let asset = Asset(context: context, object: object, prefix: parentIdentifier)
             }
 
             try context.save()
         }
     }
 
-    func deleteAllObjects(for account: S3Account) async throws {
+    func deleteAllAssets(for account: Account) async throws {
         try context.performAndWait {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "S3Object")
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Asset")
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             try self.container.persistentStoreCoordinator.execute(deleteRequest, with: context)
         }

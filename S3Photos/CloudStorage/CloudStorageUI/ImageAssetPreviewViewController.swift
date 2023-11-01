@@ -1,5 +1,5 @@
 //
-//  ImageObjectPreviewViewController.swift
+//  ImageAssetPreviewViewController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/16.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class ImageObjectPreviewViewController: UIViewController {
+class ImageAssetPreviewViewController: UIViewController {
 
-    let manager: S3ObjectManager
-    let object: S3Object
+    let manager: AssetManager
+    let asset: Asset
 
     var scrollView: UIScrollView!
     var previewView: UIImageView!
@@ -18,13 +18,13 @@ class ImageObjectPreviewViewController: UIViewController {
 
     private var previewTask: Task<UIImage?, Error>?
 
-    init(manager: S3ObjectManager, object: S3Object) {
+    init(manager: AssetManager, asset: Asset) {
         self.manager = manager
-        self.object = object
+        self.asset = asset
 
         super.init(nibName: nil, bundle: nil)
 
-        title = object.name
+        title = asset.name
     }
 
     deinit {
@@ -54,11 +54,11 @@ class ImageObjectPreviewViewController: UIViewController {
         view.addSubview(thumbnailView)
 
         Task {
-            for try await thumbnail in manager.thumbnailStreamForObject(object) {
+            for try await thumbnail in manager.thumbnailStreamForAsset(asset) {
                 thumbnailView.image = thumbnail
             }
 
-            previewTask = manager.previewTask(for: object)
+            previewTask = manager.previewTask(for: asset)
             if let preview = try await previewTask?.value {
                 thumbnailView.isHidden = true
 
@@ -101,7 +101,7 @@ class ImageObjectPreviewViewController: UIViewController {
     }
 }
 
-extension ImageObjectPreviewViewController: UIScrollViewDelegate {
+extension ImageAssetPreviewViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         previewView
     }

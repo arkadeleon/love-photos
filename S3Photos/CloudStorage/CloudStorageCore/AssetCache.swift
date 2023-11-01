@@ -1,5 +1,5 @@
 //
-//  S3ObjectCache.swift
+//  AssetCache.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/16.
@@ -8,40 +8,40 @@
 import Foundation
 import UIKit
 
-class S3ObjectCache {
+class AssetCache {
 
-    let account: S3Account
+    let account: Account
 
     private let thumbnailCache = NSCache<NSString, UIImage>()
 
     private let diskCacheURL = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-    init(account: S3Account) {
+    init(account: Account) {
         self.account = account
     }
 
-    func data(for object: S3Object) -> Data? {
-        guard let eTag = object.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+    func data(for asset: Asset) -> Data? {
+        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
             return nil
         }
 
-        let url = diskCacheURL.appending(path: "\(eTag).s3obj")
+        let url = diskCacheURL.appending(path: "\(eTag).asset")
         let data = try? Data(contentsOf: url)
 
         return data
     }
 
-    func setData(_ data: Data, forObject object: S3Object) {
-        guard let eTag = object.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+    func setData(_ data: Data, forAsset asset: Asset) {
+        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
             return
         }
 
-        let url = diskCacheURL.appending(path: "\(eTag).s3obj")
+        let url = diskCacheURL.appending(path: "\(eTag).asset")
         try? data.write(to: url, options: .atomic)
     }
 
-    func thumbnail(for object: S3Object) -> UIImage? {
-        guard let eTag = object.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+    func thumbnail(for asset: Asset) -> UIImage? {
+        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
             return nil
         }
 
@@ -50,7 +50,7 @@ class S3ObjectCache {
         thumbnail = thumbnailCache.object(forKey: eTag as NSString)
 
         if thumbnail == nil {
-            let url = diskCacheURL.appending(path: "\(eTag).s3objthumb")
+            let url = diskCacheURL.appending(path: "\(eTag).asset.thumbnail")
             let data = try? Data(contentsOf: url)
             thumbnail = data.flatMap(UIImage.init)
         }
@@ -58,14 +58,14 @@ class S3ObjectCache {
         return thumbnail
     }
 
-    func setThumbnail(_ thumbnail: UIImage, forObject object: S3Object) {
-        guard let eTag = object.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+    func setThumbnail(_ thumbnail: UIImage, forAsset asset: Asset) {
+        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
             return
         }
 
         thumbnailCache.setObject(thumbnail, forKey: eTag as NSString)
 
-        let url = diskCacheURL.appending(path: "\(eTag).s3objthumb")
+        let url = diskCacheURL.appending(path: "\(eTag).asset.thumbnail")
         let data = thumbnail.jpegData(compressionQuality: 1)
         try? data?.write(to: url, options: .atomic)
     }

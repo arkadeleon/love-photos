@@ -1,5 +1,5 @@
 //
-//  FolderObjectCollectionViewCell.swift
+//  FolderAssetCollectionViewCell.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FolderObjectCollectionViewCell: UICollectionViewCell {
+class FolderAssetCollectionViewCell: UICollectionViewCell {
 
     var thumbnailViews: [UIImageView]!
     var nameLabel: UILabel!
@@ -116,19 +116,19 @@ class FolderObjectCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(withManager manager: S3ObjectManager, object: S3Object) {
+    func configure(withManager manager: AssetManager, asset: Asset) {
         for thumbnailView in thumbnailViews {
             thumbnailView.image = nil
         }
 
         Task {
             var index = 0
-            for try await thumbnail in manager.thumbnailStreamForObject(object, count: 4) {
+            for try await thumbnail in manager.thumbnailStreamForAsset(asset, count: 4) {
                 thumbnailViews[index].image = thumbnail
                 index += 1
             }
         }
 
-        nameLabel.text = object.name
+        nameLabel.text = asset.name
     }
 }

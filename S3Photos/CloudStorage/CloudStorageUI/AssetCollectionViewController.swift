@@ -1,5 +1,5 @@
 //
-//  ObjectCollectionViewController.swift
+//  AssetCollectionViewController.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/9/26.
@@ -8,16 +8,16 @@
 import CoreData
 import UIKit
 
-class ObjectCollectionViewController: UIViewController {
+class AssetCollectionViewController: UIViewController {
 
-    let manager: S3ObjectManager
-    let fetchRequest: NSFetchRequest<S3Object>
+    let manager: AssetManager
+    let fetchRequest: NSFetchRequest<Asset>
 
     private var collectionView: UICollectionView!
     private var diffableDataSource: UICollectionViewDiffableDataSource<Int, NSManagedObjectID>!
-    private var fetchedResultsController: NSFetchedResultsController<S3Object>!
+    private var fetchedResultsController: NSFetchedResultsController<Asset>!
 
-    init(manager: S3ObjectManager, fetchRequest: NSFetchRequest<S3Object>) {
+    init(manager: AssetManager, fetchRequest: NSFetchRequest<Asset>) {
         self.manager = manager
         self.fetchRequest = fetchRequest
 
@@ -31,7 +31,7 @@ class ObjectCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        addObjectCollectionView()
+        addAssetCollectionView()
 
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: PersistenceController.shared.context, sectionNameKeyPath: "rawType", cacheName: nil)
         fetchedResultsController.delegate = self
@@ -43,36 +43,36 @@ class ObjectCollectionViewController: UIViewController {
         }
     }
 
-    private func addObjectCollectionView() {
+    private func addAssetCollectionView() {
         let flowLayout = UICollectionViewFlowLayout()
 
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.delegate = self
 
-        let folderCellRegistration = UICollectionView.CellRegistration<FolderObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = self.fetchedResultsController.object(at: indexPath)
-            cell.configure(withManager: self.manager, object: object)
+        let folderCellRegistration = UICollectionView.CellRegistration<FolderAssetCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let asset = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, asset: asset)
         }
 
-        let imageCellRegistration = UICollectionView.CellRegistration<ImageObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = self.fetchedResultsController.object(at: indexPath)
-            cell.configure(withManager: self.manager, object: object)
+        let imageCellRegistration = UICollectionView.CellRegistration<ImageAssetCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let asset = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, asset: asset)
         }
 
-        let videoCellRegistration = UICollectionView.CellRegistration<VideoObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = self.fetchedResultsController.object(at: indexPath)
-            cell.configure(withManager: self.manager, object: object)
+        let videoCellRegistration = UICollectionView.CellRegistration<VideoAssetCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let asset = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, asset: asset)
         }
 
-        let unknownCellRegistration = UICollectionView.CellRegistration<UnknownObjectCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
-            let object = self.fetchedResultsController.object(at: indexPath)
-            cell.configure(withManager: self.manager, object: object)
+        let unknownCellRegistration = UICollectionView.CellRegistration<UnknownAssetCollectionViewCell, NSManagedObjectID> { cell, indexPath, objectID in
+            let asset = self.fetchedResultsController.object(at: indexPath)
+            cell.configure(withManager: self.manager, asset: asset)
         }
 
         diffableDataSource = UICollectionViewDiffableDataSource<Int, NSManagedObjectID>(collectionView: collectionView) { collectionView, indexPath, objectID in
-            let object = self.fetchedResultsController.object(at: indexPath)
-            switch (object.type, object.fileMediaType) {
+            let asset = self.fetchedResultsController.object(at: indexPath)
+            switch (asset.type, asset.mediaType) {
             case (.folder, _):
                 let cell = collectionView.dequeueConfiguredReusableCell(using: folderCellRegistration, for: indexPath, item: objectID)
                 return cell
@@ -93,29 +93,29 @@ class ObjectCollectionViewController: UIViewController {
     }
 }
 
-extension ObjectCollectionViewController: UICollectionViewDelegate {
+extension AssetCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let object = fetchedResultsController.object(at: indexPath)
-        switch object.type {
+        let asset = fetchedResultsController.object(at: indexPath)
+        switch asset.type {
         case .folder:
-            let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
-            fetchRequest.predicate = NSPredicate(format: "prefix == %@ && key != %@", object.key!, object.key!)
+            let fetchRequest = Asset.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "parentIdentifier == %@ && identifier != %@", asset.identifier!, asset.identifier!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(key: "rawType", ascending: true),
-                NSSortDescriptor(key: "key", ascending: true)
+                NSSortDescriptor(key: "name", ascending: true)
             ]
 
-            let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
-            objectCollectionViewController.title = object.name
+            let assetCollectionViewController = AssetCollectionViewController(manager: manager, fetchRequest: fetchRequest)
+            assetCollectionViewController.title = asset.name
 
-            navigationController?.pushViewController(objectCollectionViewController, animated: true)
+            navigationController?.pushViewController(assetCollectionViewController, animated: true)
 
             Task {
-                try await manager.listObjects(prefix: object.key!)
+                try await manager.listAssets(parentIdentifier: asset.identifier!)
             }
         case .file:
-            let objects = fetchedResultsController.fetchedObjects?.filter({ $0.type == .file }) ?? []
-            let previewNavigationController = ObjectPreviewNavigationController(manager: manager, object: object, objects: objects)
+            let assets = fetchedResultsController.fetchedObjects?.filter({ $0.type == .file }) ?? []
+            let previewNavigationController = AssetPreviewNavigationController(manager: manager, asset: asset, assets: assets)
             present(previewNavigationController, animated: true)
         default:
             fatalError()
@@ -123,7 +123,7 @@ extension ObjectCollectionViewController: UICollectionViewDelegate {
     }
 }
 
-extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
+extension AssetCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch fetchedResultsController.object(at: indexPath).type {
         case .folder:
@@ -145,9 +145,9 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         switch fetchedResultsController.sections?[section].name {
-        case S3ObjectType.folder.rawValue:
+        case AssetType.folder.rawValue:
             UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-        case S3ObjectType.file.rawValue:
+        case AssetType.file.rawValue:
             .zero
         default:
             fatalError()
@@ -156,9 +156,9 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         switch fetchedResultsController.sections?[section].name {
-        case S3ObjectType.folder.rawValue: 
+        case AssetType.folder.rawValue: 
             16
-        case S3ObjectType.file.rawValue: 
+        case AssetType.file.rawValue: 
             2
         default: 
             fatalError()
@@ -167,9 +167,9 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         switch fetchedResultsController.sections?[section].name {
-        case S3ObjectType.folder.rawValue: 
+        case AssetType.folder.rawValue: 
             16
-        case S3ObjectType.file.rawValue: 
+        case AssetType.file.rawValue: 
             2
         default: 
             fatalError()
@@ -177,7 +177,7 @@ extension ObjectCollectionViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ObjectCollectionViewController: NSFetchedResultsControllerDelegate {
+extension AssetCollectionViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         Task {
             await MainActor.run {

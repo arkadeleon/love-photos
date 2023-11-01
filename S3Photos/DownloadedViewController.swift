@@ -31,30 +31,30 @@ class DownloadedViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
 
-        if let account = S3AccountManager.shared.activeAccount {
-            addObjectCollectionViewController(withAccount: account)
+        if let account = AccountManager.shared.activeAccount {
+            addAssetCollectionViewController(withAccount: account)
         }
     }
 
-    private func addObjectCollectionViewController(withAccount account: S3Account) {
-        let manager = S3ObjectManager(account: account)
+    private func addAssetCollectionViewController(withAccount account: Account) {
+        let manager = AssetManager(account: account)
 
-        let fetchRequest = NSFetchRequest<S3Object>(entityName: "S3Object")
-        fetchRequest.predicate = NSPredicate(format: "rawType == %@", S3ObjectType.file.rawValue)
+        let fetchRequest = Asset.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "rawType == %@", AssetType.file.rawValue)
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "key", ascending: true)
+            NSSortDescriptor(key: "name", ascending: true)
         ]
 
-        let objectCollectionViewController = ObjectCollectionViewController(manager: manager, fetchRequest: fetchRequest)
+        let assetCollectionViewController = AssetCollectionViewController(manager: manager, fetchRequest: fetchRequest)
 
-        addChild(objectCollectionViewController)
-        view.addSubview(objectCollectionViewController.view)
-        objectCollectionViewController.didMove(toParent: self)
+        addChild(assetCollectionViewController)
+        view.addSubview(assetCollectionViewController.view)
+        assetCollectionViewController.didMove(toParent: self)
 
-        objectCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        objectCollectionViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        objectCollectionViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        objectCollectionViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        objectCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        assetCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        assetCollectionViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        assetCollectionViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        assetCollectionViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        assetCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 }

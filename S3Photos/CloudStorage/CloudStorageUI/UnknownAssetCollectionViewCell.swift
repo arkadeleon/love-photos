@@ -1,5 +1,5 @@
 //
-//  UnknownObjectCollectionViewCell.swift
+//  UnknownAssetCollectionViewCell.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class UnknownObjectCollectionViewCell: UICollectionViewCell {
+class UnknownAssetCollectionViewCell: UICollectionViewCell {
 
     var nameLabel: UILabel!
 
@@ -31,7 +31,7 @@ class UnknownObjectCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(withManager manager: S3ObjectManager, object: S3Object) {
-        nameLabel.text = object.name
+    func configure(withManager manager: AssetManager, asset: Asset) {
+        nameLabel.text = asset.name
     }
 }

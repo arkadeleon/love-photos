@@ -1,5 +1,5 @@
 //
-//  S3ObjectService.swift
+//  S3AssetService.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/10/19.
@@ -8,13 +8,13 @@
 import Foundation
 import SotoS3
 
-class S3ObjectService {
+class S3AssetService: AssetService {
 
-    let account: S3Account
+    let account: Account
 
     private let s3: S3
 
-    init(account: S3Account) {
+    init(account: Account) {
         self.account = account
 
         let client = AWSClient(
@@ -24,8 +24,8 @@ class S3ObjectService {
         s3 = S3(client: client, endpoint: account.endpoint!)
     }
 
-    func listObjects(prefix: String) async throws -> [S3.Object] {
-        let request = S3.ListObjectsV2Request(bucket: account.bucket!, delimiter: "/", prefix: prefix)
+    func listAssets(parentIdentifier: String) async throws -> [S3.Object] {
+        let request = S3.ListObjectsV2Request(bucket: account.bucket!, delimiter: "/", prefix: parentIdentifier)
         let response = try await s3.listObjectsV2(request)
 
         var objects = [S3.Object]()
@@ -38,7 +38,7 @@ class S3ObjectService {
         }
 
         if let contents = response.contents {
-            for content in contents where content.key != prefix {
+            for content in contents where content.key != parentIdentifier {
                 objects.append(content)
             }
         }
@@ -46,14 +46,14 @@ class S3ObjectService {
         return objects
     }
 
-    func signObject(key: String) async throws -> URL {
-        let url = URL(string: account.endpoint!)!.appending(path: account.bucket!).appending(path: key)
+    func urlForAsset(identifier: String) async throws -> URL {
+        let url = URL(string: account.endpoint!)!.appending(path: account.bucket!).appending(path: identifier)
         let signedURL = try await s3.signURL(url: url, httpMethod: .GET, expires: .hours(1))
         return signedURL
     }
 
-    func getObject(key: String) async throws -> Data {
-        let request = S3.GetObjectRequest(bucket: account.bucket!, key: key)
+    func dataForAsset(identifier: String) async throws -> Data {
+        let request = S3.GetObjectRequest(bucket: account.bucket!, key: identifier)
         let response = try await s3.getObject(request)
 
         let data = response.body?.asData() ?? Data()

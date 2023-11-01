@@ -1,5 +1,5 @@
 //
-//  S3ObjectManager.swift
+//  AssetManager.swift
 //  S3Photos
 //
 //  Created by Leon Li on 2023/9/26.
@@ -7,55 +7,54 @@
 
 import AVFoundation
 import CoreData
-import SotoS3
 import UIKit
 
-class S3ObjectManager {
+class AssetManager {
 
-    let account: S3Account
+    let account: Account
 
-    private let cache: S3ObjectCache
-    private let service: S3ObjectService
+    private let cache: AssetCache
+    private let service: S3AssetService
 
-    init(account: S3Account) {
+    init(account: Account) {
         self.account = account
 
-        cache = S3ObjectCache(account: account)
-        service = S3ObjectService(account: account)
+        cache = AssetCache(account: account)
+        service = S3AssetService(account: account)
     }
 
-    func listObjects(prefix: String) async throws {
-        let objects = try await service.listObjects(prefix: prefix)
-        try await PersistenceController.shared.insertObjects(objects, prefix: prefix)
+    func listAssets(parentIdentifier: String) async throws {
+        let assets = try await service.listAssets(parentIdentifier: parentIdentifier)
+        try await PersistenceController.shared.insertAssets(assets, parentIdentifier: parentIdentifier)
     }
 
-    func urlForObject(_ object: S3Object) async throws -> URL? {
-        guard let key = object.key else {
+    func urlForAsset(_ asset: Asset) async throws -> URL? {
+        guard let identifier = asset.identifier else {
             return nil
         }
 
-        let url = try await service.signObject(key: key)
+        let url = try await service.urlForAsset(identifier: identifier)
         return url
     }
 
-    func thumbnailStreamForObject(_ object: S3Object, count: Int = 1) -> AsyncThrowingStream<UIImage, Error> {
+    func thumbnailStreamForAsset(_ asset: Asset, count: Int = 1) -> AsyncThrowingStream<UIImage, Error> {
         AsyncThrowingStream { continuation in
             Task {
-                switch object.type {
+                switch asset.type {
                 case .folder:
-                    var objects = try await PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
-                    if objects.isEmpty {
-                        try await listObjects(prefix: object.key!)
-                        objects = try await PersistenceController.shared.fetchObjects(for: account, prefix: object.key!)
+                    var assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
+                    if assets.isEmpty {
+                        try await listAssets(parentIdentifier: asset.identifier!)
+                        assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
                     }
-                    for object in objects.prefix(count) {
-                        for try await thumbnail in thumbnailStreamForObject(object) {
+                    for asset in assets.prefix(count) {
+                        for try await thumbnail in thumbnailStreamForAsset(asset) {
                             continuation.yield(thumbnail)
                         }
                     }
                     continuation.finish()
                 case .file:
-                    if let thumbnail = try await thumbnailTask(for: object).value {
+                    if let thumbnail = try await thumbnailTask(for: asset).value {
                         continuation.yield(thumbnail)
                     }
                     continuation.finish()
@@ -66,19 +65,19 @@ class S3ObjectManager {
         }
     }
 
-    func thumbnailTask(for object: S3Object) -> Task<UIImage?, Error> {
+    func thumbnailTask(for asset: Asset) -> Task<UIImage?, Error> {
         Task {
-            switch object.fileMediaType {
+            switch asset.mediaType {
             case .image:
                 try Task.checkCancellation()
 
-                if let thumbnail = cache.thumbnail(for: object) {
+                if let thumbnail = cache.thumbnail(for: asset) {
                     return thumbnail
                 }
 
                 try Task.checkCancellation()
 
-                let url = try await service.signObject(key: object.key!)
+                let url = try await service.urlForAsset(identifier: asset.identifier!)
 
                 try Task.checkCancellation()
 
@@ -101,7 +100,7 @@ class S3ObjectManager {
                 try Task.checkCancellation()
 
                 if let thumbnail {
-                    cache.setThumbnail(thumbnail, forObject: object)
+                    cache.setThumbnail(thumbnail, forAsset: asset)
                 }
 
                 try Task.checkCancellation()
@@ -110,22 +109,22 @@ class S3ObjectManager {
             case .video:
                 try Task.checkCancellation()
 
-                if let thumbnail = cache.thumbnail(for: object) {
+                if let thumbnail = cache.thumbnail(for: asset) {
                     return thumbnail
                 }
 
                 try Task.checkCancellation()
 
-                let url = try await service.signObject(key: object.key!)
+                let url = try await service.urlForAsset(identifier: asset.identifier!)
 
                 try Task.checkCancellation()
 
-                let asset = AVAsset(url: url)
-                let assetImageGenerator = AVAssetImageGenerator(asset: asset)
-                assetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
-                assetImageGenerator.appliesPreferredTrackTransform = true
+                let avAsset = AVAsset(url: url)
+                let avAssetImageGenerator = AVAssetImageGenerator(asset: avAsset)
+                avAssetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
+                avAssetImageGenerator.appliesPreferredTrackTransform = true
                 let thumbnail = await withCheckedContinuation { continuation in
-                    assetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
+                    avAssetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
                         continuation.resume(returning: image.flatMap(UIImage.init))
                     }
                 }
@@ -133,7 +132,7 @@ class S3ObjectManager {
                 try Task.checkCancellation()
 
                 if let thumbnail {
-                    cache.setThumbnail(thumbnail, forObject: object)
+                    cache.setThumbnail(thumbnail, forAsset: asset)
                 }
 
                 try Task.checkCancellation()
@@ -145,25 +144,25 @@ class S3ObjectManager {
         }
     }
 
-    func previewTask(for object: S3Object) -> Task<UIImage?, Error> {
+    func previewTask(for asset: Asset) -> Task<UIImage?, Error> {
         Task {
-            guard object.fileMediaType == .image else {
+            guard asset.mediaType == .image else {
                 return nil
             }
 
             try Task.checkCancellation()
 
-            if let data = cache.data(for: object) {
+            if let data = cache.data(for: asset) {
                 return UIImage(data: data)
             }
 
             try Task.checkCancellation()
 
-            let data = try await service.getObject(key: object.key!)
+            let data = try await service.dataForAsset(identifier: asset.identifier!)
 
             try Task.checkCancellation()
 
-            cache.setData(data, forObject: object)
+            cache.setData(data, forAsset: asset)
 
             try Task.checkCancellation()
 
