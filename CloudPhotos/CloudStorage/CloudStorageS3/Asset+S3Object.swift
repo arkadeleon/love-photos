@@ -14,8 +14,8 @@ extension Asset {
 
         self.parentIdentifier = prefix
         self.identifier = object.key
+        self.cacheIdentifier = object.eTag?.trimmingCharacters(in: CharacterSet(["\""]))
         self.name = object.key?.split(separator: "/").last.map(String.init)
-        self.eTag = object.eTag
         self.modificationDate = object.lastModified
         self.size = object.size ?? 0
 

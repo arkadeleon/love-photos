@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22225" systemVersion="22G91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName="Account" syncable="YES" codeGenerationType="class">
-        <attribute name="accessKeyId" attributeType="String" defaultValueString=""/>
-        <attribute name="bucket" attributeType="String" defaultValueString=""/>
-        <attribute name="endpoint" attributeType="String" defaultValueString=""/>
+        <attribute name="field1" optional="YES" attributeType="String"/>
+        <attribute name="field2" optional="YES" attributeType="String"/>
+        <attribute name="field3" optional="YES" attributeType="String"/>
+        <attribute name="field4" optional="YES" attributeType="String"/>
+        <attribute name="identifier" attributeType="String"/>
         <attribute name="isActive" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="secretAccessKey" optional="YES" attributeType="String" defaultValueString=""/>
+        <attribute name="rawType" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="identifier"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Asset" representedClassName="Asset" syncable="YES" codeGenerationType="class">
+        <attribute name="cacheIdentifier" optional="YES" attributeType="String"/>
         <attribute name="creationDate" optional="YES" attributeType="String"/>
         <attribute name="creationTime" optional="YES" attributeType="String"/>
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="eTag" optional="YES" attributeType="String"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="name" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="parentIdentifier" attributeType="String"/>
         <attribute name="pixelHeight" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="pixelWidth" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="rawMediaType" optional="YES" attributeType="String"/>
-        <attribute name="rawType" attributeType="String"/>
+        <attribute name="rawType" optional="YES" attributeType="String"/>
         <attribute name="size" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>

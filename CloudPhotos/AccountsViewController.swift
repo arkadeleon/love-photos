@@ -30,11 +30,11 @@ class AccountsViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
 
-        let addAccountAction = UIAction(image: UIImage(systemName: "plus.circle")) { _ in
-            self.presentAddAccountAlertController()
+        let newAccountAction = UIAction(image: UIImage(systemName: "plus.circle")) { _ in
+            self.presentNewAccountViewController(type: .s3)
         }
-        let addAcountItem = UIBarButtonItem(primaryAction: addAccountAction)
-        navigationItem.rightBarButtonItem = addAcountItem
+        let newAcountItem = UIBarButtonItem(primaryAction: newAccountAction)
+        navigationItem.rightBarButtonItem = newAcountItem
 
         addAccountCollectionViewController()
     }
@@ -53,49 +53,39 @@ class AccountsViewController: UIViewController {
         accountCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 
-    private func presentAddAccountAlertController() {
-        let alert = UIAlertController(title: "Add Account", message: nil, preferredStyle: .alert)
+    private func presentNewAccountViewController(type: AccountType) {
+        let alert = UIAlertController(title: "New Account", message: nil, preferredStyle: .alert)
 
-        alert.addTextField { accessKeyIdTextField in
-            accessKeyIdTextField.placeholder = "Access Key ID"
+        let fields = switch type {
+        case .s3: S3AccountField.allFields
         }
 
-        alert.addTextField { secretAccessKeyTextField in
-            secretAccessKeyTextField.placeholder = "Secret Access Key"
+        for field in fields {
+            alert.addTextField { textField in
+                textField.placeholder = field.title
+                textField.isSecureTextEntry = field.isSecure
+            }
         }
 
-        alert.addTextField { endpointTextField in
-            endpointTextField.placeholder = "Endpoint"
-        }
+        let textFields = alert.textFields ?? []
 
-        alert.addTextField { bucketTextField in
-            bucketTextField.placeholder = "Bucket"
-        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
 
-        let accessKeyIdTextField = alert.textFields![0]
-        let secretAccessKeyTextField = alert.textFields![1]
-        let endpointTextField = alert.textFields![2]
-        let bucketTextField = alert.textFields![3]
-
-        let cancel = UIAlertAction(title: "Cancel", style: .cancel)
-        alert.addAction(cancel)
-
-        let add = UIAlertAction(title: "Add", style: .default) { _ in
-            let accessKeyId = accessKeyIdTextField.text
-            let secretAccessKey = secretAccessKeyTextField.text
-            let endpoint = endpointTextField.text
-            let bucket = bucketTextField.text
-
+        let saveAction = UIAlertAction(title: "Save", style: .default) { _ in
             let context = PersistenceController.shared.context
+
             let account = Account(context: context)
-            account.accessKeyId = accessKeyId
-            account.secretAccessKey = secretAccessKey
-            account.endpoint = endpoint
-            account.bucket = bucket
+            account.identifier = UUID().uuidString
+            account.rawType = type.rawValue
+
+            for (index, textField) in textFields.enumerated() {
+                account.setValue(textField.text, forFieldAt: index)
+            }
 
             PersistenceController.shared.saveContext()
         }
-        alert.addAction(add)
+        alert.addAction(saveAction)
 
         present(alert, animated: true)
     }

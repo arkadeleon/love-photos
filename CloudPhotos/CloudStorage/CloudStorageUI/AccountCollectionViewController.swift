@@ -43,14 +43,19 @@ class AccountCollectionViewController: UIViewController {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, NSManagedObjectID> { cell, indexPath, objectID in
             let account = self.fetchedResultsController.object(at: indexPath)
 
+            let fields: [any AccountField] = switch account.type {
+            case .s3: S3AccountField.allFields
+            default: []
+            }
+
+            let values = fields.enumerated().map { (index, field) in
+                let value = account.value(forFieldAt: index) ?? ""
+                return field.isSecure ? value.map({ _ in "*" }).joined() : value
+            }
+
             var contentConfiguration = cell.defaultContentConfiguration()
             contentConfiguration.image = UIImage(systemName: "person.circle")
-            contentConfiguration.text = """
-            \(account.accessKeyId!)
-            \(account.secretAccessKey!.map({ _ in "*" }).joined())
-            \(account.endpoint!)
-            \(account.bucket!)
-            """
+            contentConfiguration.text = values.joined(separator: "\n")
             cell.contentConfiguration = contentConfiguration
 
             let clearCache = UIAction(title: "Clear Cache", image: UIImage(systemName: "trash"), attributes: [.destructive]) { _ in

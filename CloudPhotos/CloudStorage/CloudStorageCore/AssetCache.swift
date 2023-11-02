@@ -11,46 +11,47 @@ import UIKit
 class AssetCache {
 
     let account: Account
+    let diskCacheURL: URL
 
     private let thumbnailCache = NSCache<NSString, UIImage>()
 
-    private let diskCacheURL = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-
     init(account: Account) {
         self.account = account
+
+        self.diskCacheURL = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appending(path: account.identifier!)
     }
 
     func data(for asset: Asset) -> Data? {
-        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+        guard let cacheIdentifier = asset.cacheIdentifier else {
             return nil
         }
 
-        let url = diskCacheURL.appending(path: "\(eTag).asset")
+        let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset")
         let data = try? Data(contentsOf: url)
 
         return data
     }
 
     func setData(_ data: Data, forAsset asset: Asset) {
-        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+        guard let cacheIdentifier = asset.cacheIdentifier else {
             return
         }
 
-        let url = diskCacheURL.appending(path: "\(eTag).asset")
+        let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset")
         try? data.write(to: url, options: .atomic)
     }
 
     func thumbnail(for asset: Asset) -> UIImage? {
-        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+        guard let cacheIdentifier = asset.cacheIdentifier else {
             return nil
         }
 
         var thumbnail: UIImage? = nil
 
-        thumbnail = thumbnailCache.object(forKey: eTag as NSString)
+        thumbnail = thumbnailCache.object(forKey: cacheIdentifier as NSString)
 
         if thumbnail == nil {
-            let url = diskCacheURL.appending(path: "\(eTag).asset.thumbnail")
+            let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset.thumbnail")
             let data = try? Data(contentsOf: url)
             thumbnail = data.flatMap(UIImage.init)
         }
@@ -59,13 +60,13 @@ class AssetCache {
     }
 
     func setThumbnail(_ thumbnail: UIImage, forAsset asset: Asset) {
-        guard let eTag = asset.eTag?.trimmingCharacters(in: CharacterSet(["\""])) else {
+        guard let cacheIdentifier = asset.cacheIdentifier else {
             return
         }
 
-        thumbnailCache.setObject(thumbnail, forKey: eTag as NSString)
+        thumbnailCache.setObject(thumbnail, forKey: cacheIdentifier as NSString)
 
-        let url = diskCacheURL.appending(path: "\(eTag).asset.thumbnail")
+        let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset.thumbnail")
         let data = thumbnail.jpegData(compressionQuality: 1)
         try? data?.write(to: url, options: .atomic)
     }
