@@ -16,8 +16,7 @@
     </entity>
     <entity name="Asset" representedClassName="Asset" syncable="YES" codeGenerationType="class">
         <attribute name="cacheIdentifier" optional="YES" attributeType="String"/>
-        <attribute name="creationDate" optional="YES" attributeType="String"/>
-        <attribute name="creationTime" optional="YES" attributeType="String"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="duration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="identifier" attributeType="String"/>
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

@@ -34,8 +34,9 @@ class S3AssetService: AssetService {
         s3 = S3(client: client, endpoint: endpoint)
     }
 
-    func listAssets(parentIdentifier: String) async throws -> [S3.Object] {
-        let request = S3.ListObjectsV2Request(bucket: bucket, delimiter: "/", prefix: parentIdentifier)
+    func assetList(for parentIdentifier: String) async throws -> AssetList {
+        let prefix = parentIdentifier
+        let request = S3.ListObjectsV2Request(bucket: bucket, delimiter: "/", prefix: prefix)
         let response = try await s3.listObjectsV2(request)
 
         var objects = [S3.Object]()
@@ -48,12 +49,12 @@ class S3AssetService: AssetService {
         }
 
         if let contents = response.contents {
-            for content in contents where content.key != parentIdentifier {
+            for content in contents where content.key != prefix {
                 objects.append(content)
             }
         }
 
-        return objects
+        return AssetList(objects: objects, prefix: prefix)
     }
 
     func urlForAsset(identifier: String) async throws -> URL {

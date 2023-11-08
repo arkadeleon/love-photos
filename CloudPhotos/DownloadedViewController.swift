@@ -40,9 +40,9 @@ class DownloadedViewController: UIViewController {
         let manager = AssetManager(account: account)
 
         let fetchRequest = Asset.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "rawType == %@", AssetType.file.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "rawType == %@ && creationDate != NULL", AssetType.file.rawValue)
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "name", ascending: true)
+            NSSortDescriptor(key: "creationDate", ascending: true)
         ]
 
         let assetCollectionViewController = AssetCollectionViewController(manager: manager, fetchRequest: fetchRequest)

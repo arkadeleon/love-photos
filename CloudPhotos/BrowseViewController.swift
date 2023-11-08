@@ -63,7 +63,7 @@ class BrowseViewController: UIViewController {
         assetCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         Task {
-            try await manager.listAssets(parentIdentifier: parentIdentifier)
+            try await manager.assetList(for: parentIdentifier)
         }
     }
 }

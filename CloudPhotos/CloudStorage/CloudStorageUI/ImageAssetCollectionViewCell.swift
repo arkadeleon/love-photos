@@ -12,6 +12,7 @@ class ImageAssetCollectionViewCell: UICollectionViewCell {
     var thumbnailView: UIImageView!
 
     private var thumbnailTask: Task<UIImage?, Error>?
+    private var metadataTask: Task<AssetMetadata, Error>?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,12 +39,16 @@ class ImageAssetCollectionViewCell: UICollectionViewCell {
 
         thumbnailTask?.cancel()
         thumbnailTask = nil
+
+        metadataTask?.cancel()
+        metadataTask = nil
     }
 
     func configure(withManager manager: AssetManager, asset: Asset) {
         thumbnailView.image = nil
 
         thumbnailTask = manager.thumbnailTask(for: asset)
+        metadataTask = manager.metadataTask(for: asset)
 
         Task {
             thumbnailView.image = try await thumbnailTask?.value

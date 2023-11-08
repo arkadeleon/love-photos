@@ -9,6 +9,13 @@ import AVFoundation
 import CoreData
 import UIKit
 
+enum AssetManagerError: Error {
+    case unknownMediaType
+    case failedToCreateImageSource
+    case failedToCopyPropertiesFromImageSource
+    case failedToLoadCreationDateFromAVAsset
+}
+
 class AssetManager {
 
     let account: Account
@@ -23,12 +30,12 @@ class AssetManager {
         service = S3AssetService(account: account)
     }
 
-    func listAssets(parentIdentifier: String) async throws {
-        let assets = try await service.listAssets(parentIdentifier: parentIdentifier)
-        try await PersistenceController.shared.insertAssets(assets, parentIdentifier: parentIdentifier)
+    func assetList(for parentIdentifier: String) async throws {
+        let assetList = try await service.assetList(for: parentIdentifier)
+        try await PersistenceController.shared.insertAssetList(assetList)
     }
 
-    func urlForAsset(_ asset: Asset) async throws -> URL? {
+    func url(for asset: Asset) async throws -> URL? {
         guard let identifier = asset.identifier else {
             return nil
         }
@@ -37,18 +44,18 @@ class AssetManager {
         return url
     }
 
-    func thumbnailStreamForAsset(_ asset: Asset, count: Int = 1) -> AsyncThrowingStream<UIImage, Error> {
+    func thumbnailStream(for asset: Asset, count: Int = 1) -> AsyncThrowingStream<UIImage, Error> {
         AsyncThrowingStream { continuation in
             Task {
                 switch asset.type {
                 case .folder:
                     var assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
                     if assets.isEmpty {
-                        try await listAssets(parentIdentifier: asset.identifier!)
+                        try await assetList(for: asset.identifier!)
                         assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
                     }
                     for asset in assets.prefix(count) {
-                        for try await thumbnail in thumbnailStreamForAsset(asset) {
+                        for try await thumbnail in thumbnailStream(for: asset) {
                             continuation.yield(thumbnail)
                         }
                     }
@@ -167,6 +174,67 @@ class AssetManager {
             try Task.checkCancellation()
 
             return UIImage(data: data)
+        }
+    }
+
+    func metadataTask(for asset: Asset) -> Task<AssetMetadata, Error> {
+        Task {
+            try Task.checkCancellation()
+
+            if let creationDate = asset.creationDate {
+                let metadata = AssetMetadata(creationDate: creationDate, duration: asset.duration)
+                return metadata
+            }
+
+            try Task.checkCancellation()
+
+            switch asset.mediaType {
+            case .image:
+                let url = try await service.urlForAsset(identifier: asset.identifier!)
+
+                try Task.checkCancellation()
+
+                let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+                guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, imageSourceOptions) else {
+                    throw AssetManagerError.failedToCreateImageSource
+                }
+
+                try Task.checkCancellation()
+
+                guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as NSDictionary?,
+                      let exif = properties[kCGImagePropertyExifDictionary] as? NSDictionary,
+                      let dateTimeOriginal = exif[kCGImagePropertyExifDateTimeOriginal] as? NSString
+                else {
+                    throw AssetManagerError.failedToCopyPropertiesFromImageSource
+                }
+
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+                let creationDate = dateFormatter.date(from: dateTimeOriginal as String)
+
+                let metadata = AssetMetadata(creationDate: creationDate)
+
+                try await PersistenceController.shared.saveMetadata(metadata, for: asset)
+
+                return metadata
+            case .video:
+                let url = try await service.urlForAsset(identifier: asset.identifier!)
+
+                try Task.checkCancellation()
+
+                let avAsset = AVAsset(url: url)
+                let (creationDate, duration) = try await avAsset.load(.creationDate, .duration)
+                let creationDateValue = try await creationDate?.load(.dateValue)
+                let durationValue = Int32(duration.seconds)
+
+                let metadata = AssetMetadata(creationDate: creationDateValue, duration: durationValue)
+
+                try await PersistenceController.shared.saveMetadata(metadata, for: asset)
+
+                return metadata
+            default:
+                throw AssetManagerError.unknownMediaType
+            }
         }
     }
 }

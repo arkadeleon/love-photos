@@ -123,7 +123,7 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
 
         Task {
             var index = 0
-            for try await thumbnail in manager.thumbnailStreamForAsset(asset, count: 4) {
+            for try await thumbnail in manager.thumbnailStream(for: asset, count: 4) {
                 thumbnailViews[index].image = thumbnail
                 index += 1
             }

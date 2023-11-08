@@ -111,7 +111,7 @@ extension AssetCollectionViewController: UICollectionViewDelegate {
             navigationController?.pushViewController(assetCollectionViewController, animated: true)
 
             Task {
-                try await manager.listAssets(parentIdentifier: asset.identifier!)
+                try await manager.assetList(for: asset.identifier!)
             }
         case .file:
             let assets = fetchedResultsController.fetchedObjects?.filter({ $0.type == .file }) ?? []

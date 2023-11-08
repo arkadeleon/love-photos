@@ -16,6 +16,7 @@ class ImageAssetPreviewViewController: UIViewController {
     var previewView: UIImageView!
     var thumbnailView: UIImageView!
 
+    private var thumbnailTask: Task<UIImage?, Error>?
     private var previewTask: Task<UIImage?, Error>?
 
     init(manager: AssetManager, asset: Asset) {
@@ -28,6 +29,7 @@ class ImageAssetPreviewViewController: UIViewController {
     }
 
     deinit {
+        thumbnailTask?.cancel()
         previewTask?.cancel()
     }
 
@@ -54,9 +56,8 @@ class ImageAssetPreviewViewController: UIViewController {
         view.addSubview(thumbnailView)
 
         Task {
-            for try await thumbnail in manager.thumbnailStreamForAsset(asset) {
-                thumbnailView.image = thumbnail
-            }
+            thumbnailTask = manager.thumbnailTask(for: asset)
+            thumbnailView.image = try await thumbnailTask?.value
 
             previewTask = manager.previewTask(for: asset)
             if let preview = try await previewTask?.value {

@@ -55,22 +55,27 @@ class PersistenceController {
         }
     }
 
-    func insertAssets(_ objects: [S3.Object], parentIdentifier: String) async throws {
+    func insertAssetList(_ assetList: AssetList) async throws {
         try context.performAndWait {
-            for object in objects {
-                guard let key = object.key else {
-                    continue
-                }
-
+            for item in assetList.items {
                 let fetchRequest = Asset.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "identifier == %@", key)
+                fetchRequest.predicate = NSPredicate(format: "identifier == %@", item.identifier)
                 let result = try context.fetch(fetchRequest)
                 guard result.isEmpty else {
                     continue
                 }
 
-                let asset = Asset(context: context, object: object, prefix: parentIdentifier)
+                let asset = Asset(context: context, item: item)
             }
+
+            try context.save()
+        }
+    }
+
+    func saveMetadata(_ metadata: AssetMetadata, for asset: Asset) async throws {
+        try context.performAndWait {
+            asset.creationDate = metadata.creationDate
+            asset.duration = metadata.duration ?? 0
 
             try context.save()
         }

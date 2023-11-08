@@ -18,7 +18,9 @@ class AssetCache {
     init(account: Account) {
         self.account = account
 
-        self.diskCacheURL = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appending(path: account.identifier!)
+        diskCacheURL = try! FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appending(path: account.identifier!)
+
+        try? FileManager.default.createDirectory(at: diskCacheURL, withIntermediateDirectories: true)
     }
 
     func data(for asset: Asset) -> Data? {

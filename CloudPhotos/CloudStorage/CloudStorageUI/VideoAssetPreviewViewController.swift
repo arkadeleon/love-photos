@@ -14,6 +14,9 @@ class VideoAssetPreviewViewController: UIViewController {
     let manager: AssetManager
     let asset: Asset
 
+    private var thumbnailTask: Task<UIImage?, Error>?
+    private var player: AVPlayer?
+
     private var subscriptions = Set<AnyCancellable>()
 
     init(manager: AssetManager, asset: Asset) {
@@ -27,6 +30,11 @@ class VideoAssetPreviewViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        thumbnailTask?.cancel()
+        player?.pause()
     }
 
     override func viewDidLoad() {
@@ -54,16 +62,15 @@ class VideoAssetPreviewViewController: UIViewController {
         progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
 
         Task {
-            for try await thumbnail in manager.thumbnailStreamForAsset(asset) {
-                thumbnailView.image = thumbnail
-            }
+            thumbnailTask = manager.thumbnailTask(for: asset)
+            thumbnailView.image = try await thumbnailTask?.value
 
-            guard let url = try await manager.urlForAsset(asset) else {
+            guard let url = try await manager.url(for: asset) else {
                 return
             }
 
             let item = AVPlayerItem(url: url)
-            let player = AVPlayer(playerItem: item)
+            player = AVPlayer(playerItem: item)
 
             let layer = AVPlayerLayer(player: player)
             layer.backgroundColor = UIColor.systemBackground.cgColor
@@ -71,7 +78,7 @@ class VideoAssetPreviewViewController: UIViewController {
             layer.videoGravity = .resizeAspect
 
             let interval = CMTime(seconds: 1, preferredTimescale: 1)
-            player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { currentTime in
+            player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { currentTime in
                 let progress = Float(currentTime.seconds) / Float(item.duration.seconds)
                 if !progress.isNaN {
                     progressView.progress = progress
@@ -87,7 +94,7 @@ class VideoAssetPreviewViewController: UIViewController {
                 })
                 .store(in: &subscriptions)
 
-            player.play()
+            player?.play()
         }
     }
 }
