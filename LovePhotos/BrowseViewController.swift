@@ -10,12 +10,8 @@ import UIKit
 
 class BrowseViewController: UIViewController {
 
-    let parentIdentifier: String
-
-    init(parentIdentifier: String = "") {
-        self.parentIdentifier = parentIdentifier
-
-        super.init(nibName: nil, bundle: nil)
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
 
         title = "Browse"
 
@@ -42,6 +38,7 @@ class BrowseViewController: UIViewController {
 
     private func addAssetCollectionViewController(withAccount account: Account) {
         let manager = AssetManager(account: account)
+        let parentIdentifier = account.field5 ?? ""
 
         let fetchRequest = Asset.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "parentIdentifier == %@ && identifier != %@", parentIdentifier, parentIdentifier)

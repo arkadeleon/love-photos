@@ -10,12 +10,14 @@ enum S3AccountField: AccountField {
     case secretAccessKey
     case endpoint
     case bucket
+    case prefix
 
     static let allFields: [S3AccountField] = [
         .accessKeyID,
         .secretAccessKey,
         .endpoint,
-        .bucket
+        .bucket,
+        .prefix,
     ]
 
     var title: String {
@@ -24,6 +26,7 @@ enum S3AccountField: AccountField {
         case .secretAccessKey: "Secret Access Key"
         case .endpoint: "Endpoint"
         case .bucket: "Bucket"
+        case .prefix: "Prefix"
         }
     }
 
@@ -33,6 +36,7 @@ enum S3AccountField: AccountField {
         case .secretAccessKey: true
         case .endpoint: false
         case .bucket: false
+        case .prefix: false
         }
     }
 }

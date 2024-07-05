@@ -25,6 +25,8 @@ extension Account {
             field3 = field
         case 3:
             field4 = field
+        case 4:
+            field5 = field
         default:
             break
         }
@@ -36,6 +38,7 @@ extension Account {
         case 1: field2
         case 2: field3
         case 3: field4
+        case 4: field5
         default: nil
         }
     }
