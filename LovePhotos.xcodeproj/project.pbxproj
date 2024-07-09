@@ -19,6 +19,7 @@
 		3532DBE02ADFC0AE000898CE /* AccountManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBDF2ADFC0AE000898CE /* AccountManager.swift */; };
 		3532DBE22ADFC0FE000898CE /* AccountCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */; };
 		3532DBE62ADFD30C000898CE /* AccountsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBE52ADFD30C000898CE /* AccountsViewController.swift */; };
+		35487BB62C3D149400BFAA46 /* Asset+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35487BB52C3D149400BFAA46 /* Asset+Thumbnail.swift */; };
 		356BF6432AF1F585005B67F7 /* AssetList+S3Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6422AF1F585005B67F7 /* AssetList+S3Object.swift */; };
 		356BF6452AF1F76B005B67F7 /* AssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6442AF1F76B005B67F7 /* AssetService.swift */; };
 		356BF64B2AF347D5005B67F7 /* CloudStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6492AF347D5005B67F7 /* CloudStorage.xcdatamodeld */; };
@@ -54,6 +55,7 @@
 		3532DBDF2ADFC0AE000898CE /* AccountManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountManager.swift; sourceTree = "<group>"; };
 		3532DBE12ADFC0FE000898CE /* AccountCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCollectionViewController.swift; sourceTree = "<group>"; };
 		3532DBE52ADFD30C000898CE /* AccountsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsViewController.swift; sourceTree = "<group>"; };
+		35487BB52C3D149400BFAA46 /* Asset+Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Asset+Thumbnail.swift"; sourceTree = "<group>"; };
 		356BF6422AF1F585005B67F7 /* AssetList+S3Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AssetList+S3Object.swift"; sourceTree = "<group>"; };
 		356BF6442AF1F76B005B67F7 /* AssetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetService.swift; sourceTree = "<group>"; };
 		356BF64A2AF347D5005B67F7 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -150,8 +152,9 @@
 				356BF64C2AF34EAD005B67F7 /* AccountType.swift */,
 				356BF6522AF37C2C005B67F7 /* AccountField.swift */,
 				3532DBD32ADD2AFC000898CE /* AssetType.swift */,
-				356BF6582AFA206B005B67F7 /* AssetList.swift */,
+				35487BB52C3D149400BFAA46 /* Asset+Thumbnail.swift */,
 				356BF6562AFA2023005B67F7 /* AssetMetadata.swift */,
+				356BF6582AFA206B005B67F7 /* AssetList.swift */,
 				356BF6492AF347D5005B67F7 /* CloudStorage.xcdatamodeld */,
 			);
 			path = CloudStorageCore;
@@ -279,6 +282,7 @@
 				3598A7602AC2876E00806CC3 /* AssetManager.swift in Sources */,
 				35B2BBDA2AE25B100041AE5C /* FolderAssetCollectionViewCell.swift in Sources */,
 				356BF6552AF37CC0005B67F7 /* S3AccountField.swift in Sources */,
+				35487BB62C3D149400BFAA46 /* Asset+Thumbnail.swift in Sources */,
 				3526335A2AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift in Sources */,
 				3532DBD62ADD2C9D000898CE /* ImageAssetPreviewViewController.swift in Sources */,
 				356BF6432AF1F585005B67F7 /* AssetList+S3Object.swift in Sources */,

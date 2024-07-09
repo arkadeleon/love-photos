@@ -78,7 +78,7 @@ class AssetManager {
             case .image:
                 try Task.checkCancellation()
 
-                if let thumbnail = cache.thumbnail(for: asset) {
+                if let thumbnail = asset.thumbnail {
                     return thumbnail
                 }
 
@@ -99,7 +99,7 @@ class AssetManager {
                     kCGImageSourceCreateThumbnailFromImageAlways: true,
                     kCGImageSourceShouldCacheImmediately: true,
                     kCGImageSourceCreateThumbnailWithTransform: true,
-                    kCGImageSourceThumbnailMaxPixelSize: 200
+                    kCGImageSourceThumbnailMaxPixelSize: AssetThumbnailPixelSize
                 ]
                 let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions as CFDictionary)
                 let thumbnail = downsampledImage.map(UIImage.init)
@@ -107,7 +107,7 @@ class AssetManager {
                 try Task.checkCancellation()
 
                 if let thumbnail {
-                    cache.setThumbnail(thumbnail, forAsset: asset)
+                    try await PersistenceController.shared.saveThumbnail(thumbnail, for: asset)
                 }
 
                 try Task.checkCancellation()
@@ -116,7 +116,7 @@ class AssetManager {
             case .video:
                 try Task.checkCancellation()
 
-                if let thumbnail = cache.thumbnail(for: asset) {
+                if let thumbnail = asset.thumbnail {
                     return thumbnail
                 }
 
@@ -128,7 +128,7 @@ class AssetManager {
 
                 let avAsset = AVAsset(url: url)
                 let avAssetImageGenerator = AVAssetImageGenerator(asset: avAsset)
-                avAssetImageGenerator.maximumSize = CGSize(width: 200, height: 200)
+                avAssetImageGenerator.maximumSize = CGSize(width: AssetThumbnailPixelSize, height: AssetThumbnailPixelSize)
                 avAssetImageGenerator.appliesPreferredTrackTransform = true
                 let thumbnail = await withCheckedContinuation { continuation in
                     avAssetImageGenerator.generateCGImageAsynchronously(for: CMTime(value: 0, timescale: 60)) { image, time, error in
@@ -139,7 +139,7 @@ class AssetManager {
                 try Task.checkCancellation()
 
                 if let thumbnail {
-                    cache.setThumbnail(thumbnail, forAsset: asset)
+                    try await PersistenceController.shared.saveThumbnail(thumbnail, for: asset)
                 }
 
                 try Task.checkCancellation()

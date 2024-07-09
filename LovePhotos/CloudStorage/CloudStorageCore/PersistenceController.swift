@@ -7,6 +7,7 @@
 
 import CoreData
 import SotoS3
+import UIKit
 
 class PersistenceController {
 
@@ -67,6 +68,14 @@ class PersistenceController {
 
                 let asset = Asset(context: context, item: item)
             }
+
+            try context.save()
+        }
+    }
+
+    func saveThumbnail(_ thumbnail: UIImage, for asset: Asset) async throws {
+        try context.performAndWait {
+            asset.thumbnail = thumbnail
 
             try context.save()
         }

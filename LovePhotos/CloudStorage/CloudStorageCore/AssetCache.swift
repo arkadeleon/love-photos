@@ -13,8 +13,6 @@ class AssetCache {
     let account: Account
     let diskCacheURL: URL
 
-    private let thumbnailCache = NSCache<NSString, UIImage>()
-
     init(account: Account) {
         self.account = account
 
@@ -41,35 +39,5 @@ class AssetCache {
 
         let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset")
         try? data.write(to: url, options: .atomic)
-    }
-
-    func thumbnail(for asset: Asset) -> UIImage? {
-        guard let cacheIdentifier = asset.cacheIdentifier else {
-            return nil
-        }
-
-        var thumbnail: UIImage? = nil
-
-        thumbnail = thumbnailCache.object(forKey: cacheIdentifier as NSString)
-
-        if thumbnail == nil {
-            let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset.thumbnail")
-            let data = try? Data(contentsOf: url)
-            thumbnail = data.flatMap(UIImage.init)
-        }
-
-        return thumbnail
-    }
-
-    func setThumbnail(_ thumbnail: UIImage, forAsset asset: Asset) {
-        guard let cacheIdentifier = asset.cacheIdentifier else {
-            return
-        }
-
-        thumbnailCache.setObject(thumbnail, forKey: cacheIdentifier as NSString)
-
-        let url = diskCacheURL.appending(path: "\(cacheIdentifier).asset.thumbnail")
-        let data = thumbnail.jpegData(compressionQuality: 1)
-        try? data?.write(to: url, options: .atomic)
     }
 }
