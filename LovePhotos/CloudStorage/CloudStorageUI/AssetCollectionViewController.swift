@@ -127,13 +127,14 @@ extension AssetCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch fetchedResultsController.object(at: indexPath).type {
         case .folder:
-            let numberOfCells: CGFloat = 2
-            let width = floor((collectionView.bounds.size.width - (numberOfCells + 1) * 16) / numberOfCells)
+            let safeAreaWidth = collectionView.bounds.width - collectionView.safeAreaInsets.left - collectionView.safeAreaInsets.right
+            let numberOfCells = floor(safeAreaWidth / 160)
+            let width = floor((safeAreaWidth - (numberOfCells + 1) * 16) / numberOfCells)
             let height = width
             let size = CGSize(width: width, height: height + 30)
             return size
         case .file:
-            let numberOfCells: CGFloat = 3
+            let numberOfCells = floor(collectionView.bounds.width / 120)
             let width = floor((collectionView.bounds.size.width - (numberOfCells - 1) * 2) / numberOfCells)
             let height = width
             let size = CGSize(width: width, height: height)
@@ -146,7 +147,12 @@ extension AssetCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         switch fetchedResultsController.sections?[section].name {
         case AssetType.folder.rawValue:
-            UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+            UIEdgeInsets(
+                top: 16,
+                left: collectionView.safeAreaInsets.left + 16,
+                bottom: 16,
+                right: collectionView.safeAreaInsets.right + 16
+            )
         case AssetType.file.rawValue:
             .zero
         default:
