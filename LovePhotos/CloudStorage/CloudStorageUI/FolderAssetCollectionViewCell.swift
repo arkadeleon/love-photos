@@ -17,101 +17,84 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let thumbnailContainerView = {
-            let view = UIView()
-            view.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(view)
+        let thumbnailGridView = UIView()
+        thumbnailGridView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(thumbnailGridView)
 
-            view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-            view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-            view.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-            view.heightAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        let thumbnailView1 = UIImageView()
+        thumbnailView1.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView1.backgroundColor = .secondarySystemBackground
+        thumbnailView1.contentMode = .scaleAspectFill
+        thumbnailView1.clipsToBounds = true
+        thumbnailView1.layer.cornerRadius = 4
+        thumbnailView1.layer.masksToBounds = true
+        thumbnailGridView.addSubview(thumbnailView1)
 
-            return view
-        }()
+        let thumbnailView2 = UIImageView()
+        thumbnailView2.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView2.backgroundColor = .secondarySystemBackground
+        thumbnailView2.contentMode = .scaleAspectFill
+        thumbnailView2.clipsToBounds = true
+        thumbnailView2.layer.cornerRadius = 4
+        thumbnailView2.layer.masksToBounds = true
+        thumbnailGridView.addSubview(thumbnailView2)
 
-        let thumbnailView1 = {
-            let thumbnailView = UIImageView()
-            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-            thumbnailView.backgroundColor = .secondarySystemBackground
-            thumbnailView.contentMode = .scaleAspectFill
-            thumbnailView.clipsToBounds = true
-            thumbnailView.layer.cornerRadius = 4
-            thumbnailView.layer.masksToBounds = true
-            thumbnailContainerView.addSubview(thumbnailView)
+        let thumbnailView3 = UIImageView()
+        thumbnailView3.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView3.backgroundColor = .secondarySystemBackground
+        thumbnailView3.contentMode = .scaleAspectFill
+        thumbnailView3.clipsToBounds = true
+        thumbnailView3.layer.cornerRadius = 4
+        thumbnailView3.layer.masksToBounds = true
+        thumbnailGridView.addSubview(thumbnailView3)
 
-            thumbnailView.leadingAnchor.constraint(equalTo: thumbnailContainerView.leadingAnchor).isActive = true
-            thumbnailView.topAnchor.constraint(equalTo: thumbnailContainerView.topAnchor).isActive = true
-            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
-            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
-
-            return thumbnailView
-        }()
-
-        let thumbnailView2 = {
-            let thumbnailView = UIImageView()
-            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-            thumbnailView.backgroundColor = .secondarySystemBackground
-            thumbnailView.contentMode = .scaleAspectFill
-            thumbnailView.clipsToBounds = true
-            thumbnailView.layer.cornerRadius = 4
-            thumbnailView.layer.masksToBounds = true
-            thumbnailContainerView.addSubview(thumbnailView)
-
-            thumbnailView.trailingAnchor.constraint(equalTo: thumbnailContainerView.trailingAnchor).isActive = true
-            thumbnailView.topAnchor.constraint(equalTo: thumbnailContainerView.topAnchor).isActive = true
-            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
-            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
-
-            return thumbnailView
-        }()
-
-        let thumbnailView3 = {
-            let thumbnailView = UIImageView()
-            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-            thumbnailView.backgroundColor = .secondarySystemBackground
-            thumbnailView.contentMode = .scaleAspectFill
-            thumbnailView.clipsToBounds = true
-            thumbnailView.layer.cornerRadius = 4
-            thumbnailView.layer.masksToBounds = true
-            thumbnailContainerView.addSubview(thumbnailView)
-
-            thumbnailView.leadingAnchor.constraint(equalTo: thumbnailContainerView.leadingAnchor).isActive = true
-            thumbnailView.bottomAnchor.constraint(equalTo: thumbnailContainerView.bottomAnchor).isActive = true
-            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
-            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
-
-            return thumbnailView
-        }()
-
-        let thumbnailView4 = {
-            let thumbnailView = UIImageView()
-            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-            thumbnailView.backgroundColor = .secondarySystemBackground
-            thumbnailView.contentMode = .scaleAspectFill
-            thumbnailView.clipsToBounds = true
-            thumbnailView.layer.cornerRadius = 4
-            thumbnailView.layer.masksToBounds = true
-            thumbnailContainerView.addSubview(thumbnailView)
-
-            thumbnailView.trailingAnchor.constraint(equalTo: thumbnailContainerView.trailingAnchor).isActive = true
-            thumbnailView.bottomAnchor.constraint(equalTo: thumbnailContainerView.bottomAnchor).isActive = true
-            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
-            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
-
-            return thumbnailView
-        }()
+        let thumbnailView4 = UIImageView()
+        thumbnailView4.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView4.backgroundColor = .secondarySystemBackground
+        thumbnailView4.contentMode = .scaleAspectFill
+        thumbnailView4.clipsToBounds = true
+        thumbnailView4.layer.cornerRadius = 4
+        thumbnailView4.layer.masksToBounds = true
+        thumbnailGridView.addSubview(thumbnailView4)
 
         thumbnailViews = [thumbnailView1, thumbnailView2, thumbnailView3, thumbnailView4]
 
         nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.font = .preferredFont(forTextStyle: .body)
+        nameLabel.numberOfLines = 2
         contentView.addSubview(nameLabel)
 
-        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: thumbnailContainerView.bottomAnchor).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            thumbnailGridView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            thumbnailGridView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            thumbnailGridView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            thumbnailGridView.heightAnchor.constraint(equalTo: thumbnailGridView.widthAnchor),
+
+            thumbnailView1.leadingAnchor.constraint(equalTo: thumbnailGridView.leadingAnchor),
+            thumbnailView1.topAnchor.constraint(equalTo: thumbnailGridView.topAnchor),
+            thumbnailView1.widthAnchor.constraint(equalTo: thumbnailGridView.widthAnchor, multiplier: 0.5, constant: -1),
+            thumbnailView1.heightAnchor.constraint(equalTo: thumbnailGridView.heightAnchor, multiplier: 0.5, constant: -1),
+
+            thumbnailView2.trailingAnchor.constraint(equalTo: thumbnailGridView.trailingAnchor),
+            thumbnailView2.topAnchor.constraint(equalTo: thumbnailGridView.topAnchor),
+            thumbnailView2.widthAnchor.constraint(equalTo: thumbnailGridView.widthAnchor, multiplier: 0.5, constant: -1),
+            thumbnailView2.heightAnchor.constraint(equalTo: thumbnailGridView.heightAnchor, multiplier: 0.5, constant: -1),
+
+            thumbnailView3.leadingAnchor.constraint(equalTo: thumbnailGridView.leadingAnchor),
+            thumbnailView3.bottomAnchor.constraint(equalTo: thumbnailGridView.bottomAnchor),
+            thumbnailView3.widthAnchor.constraint(equalTo: thumbnailGridView.widthAnchor, multiplier: 0.5, constant: -1),
+            thumbnailView3.heightAnchor.constraint(equalTo: thumbnailGridView.heightAnchor, multiplier: 0.5, constant: -1),
+
+            thumbnailView4.trailingAnchor.constraint(equalTo: thumbnailGridView.trailingAnchor),
+            thumbnailView4.bottomAnchor.constraint(equalTo: thumbnailGridView.bottomAnchor),
+            thumbnailView4.widthAnchor.constraint(equalTo: thumbnailGridView.widthAnchor, multiplier: 0.5, constant: -1),
+            thumbnailView4.heightAnchor.constraint(equalTo: thumbnailGridView.heightAnchor, multiplier: 0.5, constant: -1),
+
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nameLabel.topAnchor.constraint(equalTo: thumbnailGridView.bottomAnchor, constant: 4),
+        ])
     }
 
     required init?(coder: NSCoder) {

@@ -42,24 +42,21 @@ class VideoAssetPreviewViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
 
-        let thumbnailView = UIImageView()
-        thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        let thumbnailView = UIImageView(frame: view.bounds)
+        thumbnailView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         thumbnailView.contentMode = .scaleAspectFit
         view.addSubview(thumbnailView)
-
-        thumbnailView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        thumbnailView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        thumbnailView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        thumbnailView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.layer.zPosition = 1
         view.addSubview(progressView)
 
-        progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            progressView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
 
         Task {
             thumbnailTask = manager.thumbnailTask(for: asset)
@@ -81,7 +78,11 @@ class VideoAssetPreviewViewController: UIViewController {
             player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { currentTime in
                 let progress = Float(currentTime.seconds) / Float(item.duration.seconds)
                 if !progress.isNaN {
-                    progressView.progress = progress
+                    Task {
+                        await MainActor.run {
+                            progressView.progress = progress
+                        }
+                    }
                 }
             }
 

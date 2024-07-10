@@ -17,17 +17,12 @@ class ImageAssetCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        thumbnailView = UIImageView()
-        thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView = UIImageView(frame: contentView.bounds)
+        thumbnailView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         thumbnailView.backgroundColor = .secondarySystemBackground
         thumbnailView.contentMode = .scaleAspectFill
         thumbnailView.clipsToBounds = true
         contentView.addSubview(thumbnailView)
-
-        thumbnailView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        thumbnailView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        thumbnailView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        thumbnailView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
     }
 
     required init?(coder: NSCoder) {

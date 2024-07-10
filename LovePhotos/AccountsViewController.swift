@@ -43,14 +43,10 @@ class AccountsViewController: UIViewController {
         let accountCollectionViewController = AccountCollectionViewController()
 
         addChild(accountCollectionViewController)
+        accountCollectionViewController.view.frame = view.bounds
+        accountCollectionViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(accountCollectionViewController.view)
         accountCollectionViewController.didMove(toParent: self)
-
-        accountCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        accountCollectionViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        accountCollectionViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        accountCollectionViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        accountCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     }
 
     private func presentNewAccountViewController(type: AccountType) {

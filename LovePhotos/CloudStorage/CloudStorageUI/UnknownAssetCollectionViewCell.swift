@@ -22,9 +22,11 @@ class UnknownAssetCollectionViewCell: UICollectionViewCell {
         nameLabel.numberOfLines = 2
         contentView.addSubview(nameLabel)
 
-        nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8).isActive = true
-        nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
-        nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+        ])
     }
 
     required init?(coder: NSCoder) {

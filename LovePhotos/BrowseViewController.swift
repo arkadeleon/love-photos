@@ -50,14 +50,10 @@ class BrowseViewController: UIViewController {
         let assetCollectionViewController = AssetCollectionViewController(manager: manager, fetchRequest: fetchRequest)
 
         addChild(assetCollectionViewController)
+        assetCollectionViewController.view.frame = view.bounds
+        assetCollectionViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(assetCollectionViewController.view)
         assetCollectionViewController.didMove(toParent: self)
-
-        assetCollectionViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        assetCollectionViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        assetCollectionViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        assetCollectionViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        assetCollectionViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         Task {
             try await manager.assetList(for: parentIdentifier)

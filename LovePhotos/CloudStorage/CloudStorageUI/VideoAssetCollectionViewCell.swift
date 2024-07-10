@@ -18,17 +18,12 @@ class VideoAssetCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        thumbnailView = UIImageView()
-        thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView = UIImageView(frame: contentView.bounds)
+        thumbnailView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         thumbnailView.backgroundColor = .secondarySystemBackground
         thumbnailView.contentMode = .scaleAspectFill
         thumbnailView.clipsToBounds = true
         contentView.addSubview(thumbnailView)
-
-        thumbnailView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        thumbnailView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        thumbnailView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        thumbnailView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
 
         durationLabel = UILabel()
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -36,8 +31,10 @@ class VideoAssetCollectionViewCell: UICollectionViewCell {
         durationLabel.textColor = .white
         contentView.addSubview(durationLabel)
 
-        durationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4).isActive = true
-        durationLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4).isActive = true
+        NSLayoutConstraint.activate([
+            durationLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            durationLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4),
+        ])
     }
 
     required init?(coder: NSCoder) {

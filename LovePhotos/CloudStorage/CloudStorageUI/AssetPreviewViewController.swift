@@ -61,14 +61,10 @@ class AssetPreviewViewController: UIViewController {
         pageViewController.delegate = self
 
         addChild(pageViewController)
+        pageViewController.view.frame = view.bounds
+        pageViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(pageViewController.view)
         pageViewController.didMove(toParent: self)
-
-        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        pageViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        pageViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        pageViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        pageViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
         let previewViewController = previewViewController(for: asset)
         pageViewController.setViewControllers([previewViewController], direction: .forward, animated: false)

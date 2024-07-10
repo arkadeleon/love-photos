@@ -130,8 +130,8 @@ extension AssetCollectionViewController: UICollectionViewDelegateFlowLayout {
             let safeAreaWidth = collectionView.bounds.width - collectionView.safeAreaInsets.left - collectionView.safeAreaInsets.right
             let numberOfCells = floor(safeAreaWidth / 160)
             let width = floor((safeAreaWidth - (numberOfCells + 1) * 16) / numberOfCells)
-            let height = width
-            let size = CGSize(width: width, height: height + 30)
+            let height = width + 4 + ceil(("\n" as NSString).size(withAttributes: [.font: UIFont.preferredFont(forTextStyle: .body)]).height)
+            let size = CGSize(width: width, height: height)
             return size
         case .file:
             let numberOfCells = floor(collectionView.bounds.width / 120)
