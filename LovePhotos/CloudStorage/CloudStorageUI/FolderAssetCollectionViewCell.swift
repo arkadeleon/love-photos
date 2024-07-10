@@ -12,6 +12,8 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
     var thumbnailViews: [UIImageView]!
     var nameLabel: UILabel!
 
+    private var thumbnailTask: Task<Void, Error>?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -28,24 +30,6 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
             return view
         }()
 
-        let thumbnailView0 = {
-            let thumbnailView = UIImageView()
-            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
-            thumbnailView.backgroundColor = .secondarySystemBackground
-            thumbnailView.contentMode = .scaleAspectFill
-            thumbnailView.clipsToBounds = true
-            thumbnailView.layer.cornerRadius = 4
-            thumbnailView.layer.masksToBounds = true
-            thumbnailContainerView.addSubview(thumbnailView)
-
-            thumbnailView.leadingAnchor.constraint(equalTo: thumbnailContainerView.leadingAnchor).isActive = true
-            thumbnailView.topAnchor.constraint(equalTo: thumbnailContainerView.topAnchor).isActive = true
-            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
-            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
-
-            return thumbnailView
-        }()
-
         let thumbnailView1 = {
             let thumbnailView = UIImageView()
             thumbnailView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,7 +40,7 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
             thumbnailView.layer.masksToBounds = true
             thumbnailContainerView.addSubview(thumbnailView)
 
-            thumbnailView.trailingAnchor.constraint(equalTo: thumbnailContainerView.trailingAnchor).isActive = true
+            thumbnailView.leadingAnchor.constraint(equalTo: thumbnailContainerView.leadingAnchor).isActive = true
             thumbnailView.topAnchor.constraint(equalTo: thumbnailContainerView.topAnchor).isActive = true
             thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
             thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
@@ -74,6 +58,24 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
             thumbnailView.layer.masksToBounds = true
             thumbnailContainerView.addSubview(thumbnailView)
 
+            thumbnailView.trailingAnchor.constraint(equalTo: thumbnailContainerView.trailingAnchor).isActive = true
+            thumbnailView.topAnchor.constraint(equalTo: thumbnailContainerView.topAnchor).isActive = true
+            thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
+            thumbnailView.heightAnchor.constraint(equalTo: thumbnailContainerView.heightAnchor, multiplier: 0.5, constant: -1).isActive = true
+
+            return thumbnailView
+        }()
+
+        let thumbnailView3 = {
+            let thumbnailView = UIImageView()
+            thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+            thumbnailView.backgroundColor = .secondarySystemBackground
+            thumbnailView.contentMode = .scaleAspectFill
+            thumbnailView.clipsToBounds = true
+            thumbnailView.layer.cornerRadius = 4
+            thumbnailView.layer.masksToBounds = true
+            thumbnailContainerView.addSubview(thumbnailView)
+
             thumbnailView.leadingAnchor.constraint(equalTo: thumbnailContainerView.leadingAnchor).isActive = true
             thumbnailView.bottomAnchor.constraint(equalTo: thumbnailContainerView.bottomAnchor).isActive = true
             thumbnailView.widthAnchor.constraint(equalTo: thumbnailContainerView.widthAnchor, multiplier: 0.5, constant: -1).isActive = true
@@ -82,7 +84,7 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
             return thumbnailView
         }()
 
-        let thumbnailView3 = {
+        let thumbnailView4 = {
             let thumbnailView = UIImageView()
             thumbnailView.translatesAutoresizingMaskIntoConstraints = false
             thumbnailView.backgroundColor = .secondarySystemBackground
@@ -100,7 +102,7 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
             return thumbnailView
         }()
 
-        thumbnailViews = [thumbnailView0, thumbnailView1, thumbnailView2, thumbnailView3]
+        thumbnailViews = [thumbnailView1, thumbnailView2, thumbnailView3, thumbnailView4]
 
         nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -116,15 +118,25 @@ class FolderAssetCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        thumbnailTask?.cancel()
+        thumbnailTask = nil
+    }
+
     func configure(withManager manager: AssetManager, asset: Asset) {
         for thumbnailView in thumbnailViews {
             thumbnailView.image = nil
         }
 
-        Task {
+        thumbnailTask = Task.detached {
             var index = 0
             for try await thumbnail in manager.thumbnailStream(for: asset, count: 4) {
-                thumbnailViews[index].image = thumbnail
+                let thumbnailView = await self.thumbnailViews[index]
+                await MainActor.run {
+                    thumbnailView.image = thumbnail
+                }
                 index += 1
             }
         }
