@@ -18,6 +18,7 @@ class UnknownAssetCollectionViewCell: UICollectionViewCell {
 
         nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.font = .preferredFont(forTextStyle: .body)
         nameLabel.textAlignment = .center
         nameLabel.numberOfLines = 2
         contentView.addSubview(nameLabel)

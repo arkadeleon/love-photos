@@ -15,7 +15,7 @@ extension Asset {
             thumbnailData.flatMap(UIImage.init)
         }
         set {
-            thumbnailData = newValue?.jpegData(compressionQuality: 1)
+            thumbnailData = newValue?.jpegData(compressionQuality: 0.85)
         }
     }
 }

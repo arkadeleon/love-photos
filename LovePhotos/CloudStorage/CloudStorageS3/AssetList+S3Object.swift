@@ -27,13 +27,9 @@ extension AssetList.Item {
 
             let pathExtension = (object.key as NSString?)?.pathExtension.lowercased()
             switch pathExtension {
-            case "heic",
-                 "jpg",
-                 "png":
+            case "heic", "jpg", "png":
                 mediaType = .image
-            case "avi",
-                 "mov",
-                 "mp4":
+            case "avi", "mov", "mp4":
                 mediaType = .video
             default:
                 mediaType = .unknown
