@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3501BB712C46547B005C048C /* AssetPresentationTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3501BB702C46547B005C048C /* AssetPresentationTransitionAnimator.swift */; };
+		3501BB732C465741005C048C /* AssetDismissalTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3501BB722C465741005C048C /* AssetDismissalTransitionAnimator.swift */; };
 		352633582AC2ABDD00CA7060 /* AssetCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633572AC2ABDD00CA7060 /* AssetCollectionViewController.swift */; };
 		3526335A2AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352633592AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift */; };
 		3532DBD02ADD11B0000898CE /* AssetCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3532DBCF2ADD11B0000898CE /* AssetCache.swift */; };
@@ -43,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3501BB702C46547B005C048C /* AssetPresentationTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPresentationTransitionAnimator.swift; sourceTree = "<group>"; };
+		3501BB722C465741005C048C /* AssetDismissalTransitionAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDismissalTransitionAnimator.swift; sourceTree = "<group>"; };
 		352633572AC2ABDD00CA7060 /* AssetCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCollectionViewController.swift; sourceTree = "<group>"; };
 		352633592AC2AE3300CA7060 /* ImageAssetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAssetCollectionViewCell.swift; sourceTree = "<group>"; };
 		3532DBCF2ADD11B0000898CE /* AssetCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetCache.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 				3532DBD72ADD3A07000898CE /* AssetPreviewViewController.swift */,
 				3532DBD52ADD2C9D000898CE /* ImageAssetPreviewViewController.swift */,
 				3532DBD92ADE28DC000898CE /* VideoAssetPreviewViewController.swift */,
+				3501BB702C46547B005C048C /* AssetPresentationTransitionAnimator.swift */,
+				3501BB722C465741005C048C /* AssetDismissalTransitionAnimator.swift */,
 			);
 			path = CloudStorageUI;
 			sourceTree = "<group>";
@@ -263,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3501BB712C46547B005C048C /* AssetPresentationTransitionAnimator.swift in Sources */,
 				35B2BBD62AE131FC0041AE5C /* S3AssetService.swift in Sources */,
 				3532DBD82ADD3A07000898CE /* AssetPreviewViewController.swift in Sources */,
 				3598A7212AC188AA00806CC3 /* AppDelegate.swift in Sources */,
@@ -289,6 +296,7 @@
 				35B2BBDC2AE6174E0041AE5C /* AssetPreviewNavigationController.swift in Sources */,
 				3532DBD42ADD2AFC000898CE /* AssetType.swift in Sources */,
 				3532DBDA2ADE28DC000898CE /* VideoAssetPreviewViewController.swift in Sources */,
+				3501BB732C465741005C048C /* AssetDismissalTransitionAnimator.swift in Sources */,
 				356BF6592AFA206B005B67F7 /* AssetList.swift in Sources */,
 				356BF64B2AF347D5005B67F7 /* CloudStorage.xcdatamodeld in Sources */,
 				352633582AC2ABDD00CA7060 /* AssetCollectionViewController.swift in Sources */,
