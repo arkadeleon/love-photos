@@ -34,27 +34,47 @@ class S3AssetService: AssetService {
         s3 = S3(client: client, endpoint: endpoint)
     }
 
-    func assetList(for parentIdentifier: String) async throws -> AssetList {
-        let prefix = parentIdentifier
-        let request = S3.ListObjectsV2Request(bucket: bucket, delimiter: "/", prefix: prefix)
-        let response = try await s3.listObjectsV2(request)
+    deinit {
+        do {
+            try s3.client.syncShutdown()
+        } catch {
+        }
+    }
 
-        var objects = [S3.Object]()
+    func assetListStream(for prefix: String) -> AsyncStream<AssetList> {
+        AsyncStream { continuation in
+            Task {
+                var startAfter: String? = nil
 
-        if let commonPrefixes = response.commonPrefixes {
-            for commonPrefix in commonPrefixes {
-                let object = S3.Object(key: commonPrefix.prefix)
-                objects.append(object)
+                repeat {
+                    let request = S3.ListObjectsV2Request(bucket: bucket, prefix: prefix, startAfter: startAfter)
+                    let response = try await s3.listObjectsV2(request)
+
+                    guard let contents = response.contents else {
+                        break
+                    }
+
+                    var objects: [S3.Object] = []
+
+                    for content in contents {
+                        guard let key = content.key, key != prefix else {
+                            continue
+                        }
+
+                        print(key)
+                        objects.append(content)
+                    }
+
+                    startAfter = objects.last?.key
+
+                    let assetList = AssetList(objects: objects, prefix: prefix)
+                    continuation.yield(assetList)
+
+                } while startAfter != nil
+
+                continuation.finish()
             }
         }
-
-        if let contents = response.contents {
-            for content in contents where content.key != prefix {
-                objects.append(content)
-            }
-        }
-
-        return AssetList(objects: objects, prefix: prefix)
     }
 
     func urlForAsset(identifier: String) async throws -> URL {

@@ -37,7 +37,6 @@ class BrowseViewController: UIViewController {
     }
 
     private func addAssetCollectionViewController(withAccount account: Account) {
-        let manager = AssetManager(account: account)
         let parentIdentifier = account.field5 ?? ""
 
         let fetchRequest = Asset.fetchRequest()
@@ -47,6 +46,7 @@ class BrowseViewController: UIViewController {
             NSSortDescriptor(key: "name", ascending: true)
         ]
 
+        let manager = AssetManager(account: account)
         let assetCollectionViewController = AssetCollectionViewController(manager: manager, fetchRequest: fetchRequest)
 
         addChild(assetCollectionViewController)
@@ -54,9 +54,5 @@ class BrowseViewController: UIViewController {
         assetCollectionViewController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(assetCollectionViewController.view)
         assetCollectionViewController.didMove(toParent: self)
-
-        Task {
-            try await manager.assetList(for: parentIdentifier)
-        }
     }
 }

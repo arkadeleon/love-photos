@@ -30,6 +30,7 @@
 		356BF6552AF37CC0005B67F7 /* S3AccountField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6542AF37CC0005B67F7 /* S3AccountField.swift */; };
 		356BF6572AFA2023005B67F7 /* AssetMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6562AFA2023005B67F7 /* AssetMetadata.swift */; };
 		356BF6592AFA206B005B67F7 /* AssetList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356BF6582AFA206B005B67F7 /* AssetList.swift */; };
+		3579DF9B2D67326400B8C98A /* SVProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3579DF9A2D67326400B8C98A /* SVProgressHUD */; };
 		3598A7212AC188AA00806CC3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7202AC188AA00806CC3 /* AppDelegate.swift */; };
 		3598A7232AC188AA00806CC3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598A7222AC188AA00806CC3 /* SceneDelegate.swift */; };
 		3598A72D2AC188AB00806CC3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3598A72C2AC188AB00806CC3 /* Assets.xcassets */; };
@@ -88,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3579DF9B2D67326400B8C98A /* SVProgressHUD in Frameworks */,
 				3598A75E2AC2873800806CC3 /* SotoS3 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,6 +213,7 @@
 			name = LovePhotos;
 			packageProductDependencies = (
 				3598A75D2AC2873800806CC3 /* SotoS3 */,
+				3579DF9A2D67326400B8C98A /* SVProgressHUD */,
 			);
 			productName = LovePhotos;
 			productReference = 3598A71D2AC188AA00806CC3 /* LovePhotos.app */;
@@ -242,6 +245,7 @@
 			mainGroup = 3598A7142AC188AA00806CC3;
 			packageReferences = (
 				3598A75B2AC27B4C00806CC3 /* XCRemoteSwiftPackageReference "soto" */,
+				3579DF992D67326400B8C98A /* XCRemoteSwiftPackageReference "SVProgressHUD" */,
 			);
 			productRefGroup = 3598A71E2AC188AA00806CC3 /* Products */;
 			projectDirPath = "";
@@ -519,6 +523,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3579DF992D67326400B8C98A /* XCRemoteSwiftPackageReference "SVProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SVProgressHUD/SVProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.1;
+			};
+		};
 		3598A75B2AC27B4C00806CC3 /* XCRemoteSwiftPackageReference "soto" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/soto-project/soto.git";
@@ -530,6 +542,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3579DF9A2D67326400B8C98A /* SVProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3579DF992D67326400B8C98A /* XCRemoteSwiftPackageReference "SVProgressHUD" */;
+			productName = SVProgressHUD;
+		};
 		3598A75D2AC2873800806CC3 /* SotoS3 */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3598A75B2AC27B4C00806CC3 /* XCRemoteSwiftPackageReference "soto" */;

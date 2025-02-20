@@ -1,4 +1,5 @@
 {
+  "originHash" : "b15e1ff6fb7058b1dcab1255ed156ff86a3a15dbc63bd64809c4b1e782566911",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -34,6 +35,15 @@
       "state" : {
         "revision" : "1ddc6a9d21fa129e24886a0085e8b6091777f924",
         "version" : "6.5.1"
+      }
+    },
+    {
+      "identity" : "svprogresshud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SVProgressHUD/SVProgressHUD.git",
+      "state" : {
+        "revision" : "c33f7c775ba7feea6047a1fc3257f2e5863b44f7",
+        "version" : "2.3.1"
       }
     },
     {
@@ -118,5 +128,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

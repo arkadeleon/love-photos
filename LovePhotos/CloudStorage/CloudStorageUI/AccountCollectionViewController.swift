@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import SVProgressHUD
 import UIKit
 
 class AccountCollectionViewController: UIViewController {
@@ -58,12 +59,22 @@ class AccountCollectionViewController: UIViewController {
             contentConfiguration.text = values.joined(separator: "\n")
             cell.contentConfiguration = contentConfiguration
 
-            let clearCache = UIAction(title: "Clear Cache", image: UIImage(systemName: "trash"), attributes: [.destructive]) { _ in
+            let clearCacheAction = UIAction(title: "Clear Cache", image: UIImage(systemName: "trash"), attributes: [.destructive]) { _ in
                 Task {
                     try await PersistenceController.shared.deleteAllAssets(for: account)
                 }
             }
-            let menu = UIMenu(options: .displayInline, children: [clearCache])
+            let synchronizeAction = UIAction(title: "Synchronize", image: UIImage(systemName: "arrow.trianglehead.2.clockwise.rotate.90")) { _ in
+                Task { @MainActor in
+                    SVProgressHUD.show(withStatus: "Synchronizing...")
+
+                    let manager = AssetManager(account: account)
+                    try await manager.synchronizeAssets()
+
+                    await SVProgressHUD.dismiss()
+                }
+            }
+            let menu = UIMenu(options: .displayInline, children: [synchronizeAction, clearCacheAction])
             let button = UIButton(type: .custom)
             button.setImage(UIImage(systemName: "ellipsis.circle"), for: .normal)
             button.menu = menu
@@ -100,27 +111,25 @@ extension AccountCollectionViewController: UICollectionViewDelegate {
 
 extension AccountCollectionViewController: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        Task {
-            await MainActor.run {
-                guard let dataSource = collectionView?.dataSource as? UICollectionViewDiffableDataSource<Int, NSManagedObjectID> else {
-                    assertionFailure("The data source has not implemented snapshot support while it should")
-                    return
-                }
-                var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-                let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
-
-                let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
-                    guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
-                        return nil
-                    }
-                    guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
-                    return itemIdentifier
-                }
-                snapshot.reloadItems(reloadIdentifiers)
-
-                let shouldAnimate = collectionView?.numberOfSections != 0
-                dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
+        Task { @MainActor in
+            guard let dataSource = collectionView?.dataSource as? UICollectionViewDiffableDataSource<Int, NSManagedObjectID> else {
+                assertionFailure("The data source has not implemented snapshot support while it should")
+                return
             }
+            var snapshot = snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+            let currentSnapshot = dataSource.snapshot() as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>
+
+            let reloadIdentifiers: [NSManagedObjectID] = snapshot.itemIdentifiers.compactMap { itemIdentifier in
+                guard let currentIndex = currentSnapshot.indexOfItem(itemIdentifier), let index = snapshot.indexOfItem(itemIdentifier), index == currentIndex else {
+                    return nil
+                }
+                guard let existingObject = try? controller.managedObjectContext.existingObject(with: itemIdentifier), existingObject.isUpdated else { return nil }
+                return itemIdentifier
+            }
+            snapshot.reloadItems(reloadIdentifiers)
+
+            let shouldAnimate = collectionView?.numberOfSections != 0
+            dataSource.apply(snapshot as NSDiffableDataSourceSnapshot<Int, NSManagedObjectID>, animatingDifferences: shouldAnimate)
         }
     }
 }

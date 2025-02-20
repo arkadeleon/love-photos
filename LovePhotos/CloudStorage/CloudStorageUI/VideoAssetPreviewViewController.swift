@@ -78,10 +78,8 @@ class VideoAssetPreviewViewController: UIViewController {
             player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { currentTime in
                 let progress = Float(currentTime.seconds) / Float(item.duration.seconds)
                 if !progress.isNaN {
-                    Task {
-                        await MainActor.run {
-                            progressView.progress = progress
-                        }
+                    Task { @MainActor in
+                        progressView.progress = progress
                     }
                 }
             }

@@ -10,22 +10,26 @@ import SotoS3
 
 extension AssetList {
     init(objects: [S3.Object], prefix: String) {
-        let items = objects.map({ Item(object: $0, prefix: prefix) })
+        let items = objects.compactMap(AssetList.Item.init)
         self.init(items: items)
     }
 }
 
 extension AssetList.Item {
-    init(object: S3.Object, prefix: String) {
+    init?(object: S3.Object) {
+        guard let key = object.key else {
+            return nil
+        }
+
         let type: AssetType
         let mediaType: AssetMediaType?
-        if object.key?.hasSuffix("/") == true {
+        if key.hasSuffix("/") {
             type = .folder
             mediaType = nil
         } else {
             type = .file
 
-            let pathExtension = (object.key as NSString?)?.pathExtension.lowercased()
+            let pathExtension = (key as NSString).pathExtension.lowercased()
             switch pathExtension {
             case "heic", "jpg", "png":
                 mediaType = .image
@@ -36,13 +40,16 @@ extension AssetList.Item {
             }
         }
 
+        let parentKey = (key as NSString).deletingLastPathComponent.appending("/")
+        let name = (key as NSString).lastPathComponent
+
         self.init(
             type: type,
             mediaType: mediaType,
-            parentIdentifier: prefix,
-            identifier: object.key ?? "",
+            parentIdentifier: parentKey,
+            identifier: key,
             cacheIdentifier: object.eTag?.trimmingCharacters(in: CharacterSet(["\""])),
-            name: object.key?.split(separator: "/").last.map(String.init),
+            name: name,
             size: object.size,
             modificationDate: object.lastModified
         )

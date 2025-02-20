@@ -30,9 +30,12 @@ class AssetManager {
         service = S3AssetService(account: account)
     }
 
-    func assetList(for parentIdentifier: String) async throws {
-        let assetList = try await service.assetList(for: parentIdentifier)
-        try await PersistenceController.shared.insertAssetList(assetList)
+    func synchronizeAssets() async throws {
+        let prefix = account.field5 ?? ""
+        let assetListStream = service.assetListStream(for: prefix)
+        for await assetList in assetListStream {
+            try await PersistenceController.shared.insertAssetList(assetList)
+        }
     }
 
     func url(for asset: Asset) async throws -> URL? {
@@ -49,11 +52,7 @@ class AssetManager {
             Task {
                 switch asset.type {
                 case .folder:
-                    var assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
-                    if assets.isEmpty {
-                        try await assetList(for: asset.identifier!)
-                        assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
-                    }
+                    let assets = try await PersistenceController.shared.fetchAssets(for: account, parentIdentifier: asset.identifier!)
                     for asset in assets.prefix(count) {
                         for try await thumbnail in thumbnailStream(for: asset) {
                             continuation.yield(thumbnail)
