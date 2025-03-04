@@ -28,8 +28,7 @@ class S3AssetService: AssetService {
         bucket = account.field4 ?? ""
 
         let client = AWSClient(
-            credentialProvider: .static(accessKeyId: accessKeyId, secretAccessKey: secretAccessKey),
-            httpClientProvider: .createNew
+            credentialProvider: .static(accessKeyId: accessKeyId, secretAccessKey: secretAccessKey)
         )
         s3 = S3(client: client, endpoint: endpoint)
     }
@@ -87,7 +86,8 @@ class S3AssetService: AssetService {
         let request = S3.GetObjectRequest(bucket: bucket, key: identifier)
         let response = try await s3.getObject(request)
 
-        let data = response.body?.asData() ?? Data()
+        let buffer = try await response.body.collect(upTo: .max)
+        let data = Data(buffer: buffer)
         return data
     }
 }
